@@ -1,0 +1,3118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>ANIME AUCTION ARENA — DIVYANSH BHATT</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Orbitron:wght@600;700;800;900&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --bg-obsidian: #06080f;
+      --panel-bg: rgba(14, 20, 36, 0.92);
+      --accent-primary: #22d3ee;
+      --accent-secondary: #facc15;
+      --glow-primary: rgba(34, 211, 238, 0.18);
+    }
+
+    body[data-theme="neon"] {
+      --bg-obsidian: #06080f;
+      --panel-bg: rgba(14, 20, 36, 0.92);
+      --accent-primary: #22d3ee;
+      --accent-secondary: #facc15;
+      --glow-primary: rgba(34, 211, 238, 0.18);
+      background-image:
+        radial-gradient(circle at 18% 12%, rgba(34, 211, 238, 0.16) 0%, transparent 42%),
+        radial-gradient(circle at 84% 18%, rgba(244, 63, 94, 0.15) 0%, transparent 42%),
+        radial-gradient(circle at 50% 92%, rgba(250, 204, 21, 0.11) 0%, transparent 48%);
+    }
+
+    body[data-theme="sunset"] {
+      --bg-obsidian: #130812;
+      --panel-bg: rgba(33, 14, 29, 0.92);
+      --accent-primary: #fb7185;
+      --accent-secondary: #fb923c;
+      --glow-primary: rgba(251, 113, 133, 0.2);
+      background-image:
+        radial-gradient(circle at 16% 14%, rgba(251, 113, 133, 0.2) 0%, transparent 44%),
+        radial-gradient(circle at 85% 20%, rgba(251, 146, 60, 0.18) 0%, transparent 44%),
+        radial-gradient(circle at 52% 92%, rgba(192, 132, 252, 0.13) 0%, transparent 50%);
+    }
+
+    body[data-theme="emerald"] {
+      --bg-obsidian: #051210;
+      --panel-bg: rgba(10, 29, 26, 0.92);
+      --accent-primary: #34d399;
+      --accent-secondary: #38bdf8;
+      --glow-primary: rgba(52, 211, 153, 0.2);
+      background-image:
+        radial-gradient(circle at 18% 12%, rgba(52, 211, 153, 0.18) 0%, transparent 44%),
+        radial-gradient(circle at 84% 18%, rgba(56, 189, 248, 0.15) 0%, transparent 42%),
+        radial-gradient(circle at 50% 92%, rgba(163, 230, 53, 0.09) 0%, transparent 48%);
+    }
+
+    body[data-theme="solar"] {
+      --bg-obsidian: #120d05;
+      --panel-bg: rgba(31, 23, 10, 0.92);
+      --accent-primary: #facc15;
+      --accent-secondary: #f97316;
+      --glow-primary: rgba(250, 204, 21, 0.2);
+      background-image:
+        radial-gradient(circle at 18% 12%, rgba(250, 204, 21, 0.18) 0%, transparent 44%),
+        radial-gradient(circle at 84% 18%, rgba(249, 115, 22, 0.16) 0%, transparent 42%),
+        radial-gradient(circle at 50% 92%, rgba(244, 63, 94, 0.1) 0%, transparent 48%);
+    }
+
+    html, body {
+      max-width: 100%;
+      overflow-x: hidden;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-obsidian);
+      color: #f8fafc;
+      min-height: 100dvh;
+      padding-bottom: env(safe-area-inset-bottom);
+      transition: background-color 0.25s ease, background-image 0.25s ease;
+    }
+
+    .font-display {
+      font-family: 'Orbitron', sans-serif;
+    }
+
+    .glass-panel {
+      background: var(--panel-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(148, 163, 184, 0.16);
+      box-shadow: 0 20px 44px -16px rgba(0, 0, 0, 0.72);
+    }
+
+    .glass-card-active {
+      background: linear-gradient(145deg, rgba(18, 27, 48, 0.96), rgba(10, 14, 26, 0.98));
+      border: 1px solid color-mix(in srgb, var(--accent-primary) 50%, transparent);
+      box-shadow: 0 0 32px var(--glow-primary);
+    }
+
+    @keyframes pulseGlow {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(251, 113, 133, 0.45); }
+      50% { box-shadow: 0 0 0 10px rgba(251, 113, 133, 0); }
+    }
+
+    .urgent-pulse {
+      animation: pulseGlow 1s infinite;
+    }
+
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: rgba(15, 23, 42, 0.5);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(100, 116, 139, 0.5);
+      border-radius: 9999px;
+    }
+  </style>
+</head>
+<body data-theme="neon" class="antialiased selection:bg-cyan-400 selection:text-slate-950">
+
+  <!-- Toast Banner -->
+  <div id="toast-container" class="fixed top-16 left-1/2 -translate-x-1/2 z-[60] flex flex-col items-center gap-2 pointer-events-none w-[92%] max-w-md"></div>
+
+  <!-- ===================================================================== -->
+  <!-- TOP NAVIGATION BAR (TOP-LEFT DEV BUTTON + ACCOUNT, FRIENDS, CHAT)   -->
+  <!-- ===================================================================== -->
+  <header class="sticky top-0 z-40 border-b border-slate-800/80 bg-slate-950/90 backdrop-blur-md">
+    <div class="max-w-7xl mx-auto px-3 sm:px-6 py-2.5 flex flex-wrap items-center justify-between gap-2">
+      <div class="flex items-center gap-2 min-w-0">
+        <!-- Top-Left DEV Button -->
+        <button id="btn-dev-trigger" type="button" title="Developer Console (Code: 15042010)"
+          class="px-2.5 py-1.5 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 border border-amber-400/50 text-amber-300 font-display font-black text-[11px] tracking-wider flex items-center gap-1.5 transition active:scale-95 shrink-0 min-h-[36px]">
+          <svg class="w-3.5 h-3.5 text-amber-300 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 2l7 4v6c0 5-3 8.5-7 10-4-1.5-7-5-7-10V6l7-4z" />
+            <circle cx="12" cy="11" r="2" />
+          </svg>
+          <span id="dev-header-badge">DEV</span>
+        </button>
+
+        <!-- Custom Brand Logo -->
+        <button id="btn-home-logo" type="button" class="flex items-center gap-2 text-left group min-w-0">
+          <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-cyan-400 via-blue-500 to-rose-500 p-[2px] shadow-md shadow-cyan-500/20 group-hover:scale-105 transition shrink-0">
+            <div class="w-full h-full bg-slate-950 rounded-[10px] flex items-center justify-center">
+              <svg class="w-5 h-5 text-cyan-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3z" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 12l8-4.5M12 12v9M12 12L4 7.5" />
+              </svg>
+            </div>
+          </div>
+          <div class="min-w-0">
+            <div class="font-display font-extrabold text-xs sm:text-sm tracking-wider text-white group-hover:text-cyan-300 transition truncate">
+              ANIME AUCTION ARENA
+            </div>
+            <div class="text-[10px] font-semibold text-emerald-400 flex items-center gap-1.5 truncate">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse shrink-0"></span>
+              <span id="network-status-text" class="truncate">200 Fighters • Ready</span>
+            </div>
+          </div>
+        </button>
+      </div>
+
+      <!-- Right Header Controls -->
+      <div class="flex items-center gap-1.5 sm:gap-2 flex-wrap">
+        <button id="btn-account-pill" type="button" title="Guest, Gmail or Browser Account"
+          class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-cyan-500/40 text-xs font-semibold text-cyan-200 transition min-h-[36px]">
+          <span id="account-dot" class="w-2 h-2 rounded-full bg-amber-400 shrink-0"></span>
+          <span id="header-username-label" class="max-w-[85px] sm:max-w-[125px] truncate">Guest</span>
+          <span id="header-id-badge" class="hidden xl:inline text-[10px] px-1.5 py-0.5 rounded bg-cyan-500/15 text-cyan-300 font-mono"></span>
+        </button>
+
+        <button id="btn-toggle-friends" type="button" title="Friends & Server Invites"
+          class="relative flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-emerald-950/70 hover:bg-emerald-900/80 border border-emerald-500/40 text-xs font-bold text-emerald-200 transition active:scale-95 min-h-[36px]">
+          <svg class="w-3.5 h-3.5 text-emerald-300 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M16 11c1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3 1.34 3 3 3zM8 11c1.66 0 3-1.34 3-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5C15 14.17 10.33 13 8 13zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z" />
+          </svg>
+          <span class="hidden sm:inline">Friends</span>
+          <span id="friend-invite-badge" class="hidden -top-1.5 -right-1.5 min-w-[18px] h-[18px] px-1 rounded-full bg-amber-400 text-slate-950 font-display font-black text-[10px] flex items-center justify-center shadow">
+            0
+          </span>
+        </button>
+
+        <select id="theme-selector" aria-label="Color Theme" title="Choose Color Theme"
+          class="px-2 py-1.5 rounded-xl bg-slate-900 border border-slate-700 text-[11px] font-bold text-amber-300 focus:outline-none focus:border-cyan-400 min-h-[36px]">
+          <option value="neon" selected>⚡ Neon Cyber</option>
+          <option value="sunset">🌅 Sunset Samurai</option>
+          <option value="emerald">🌿 Emerald Arcade</option>
+          <option value="solar">☀️ Solar Gold</option>
+        </select>
+
+        <button id="btn-toggle-chat" type="button" title="Toggle Live Chat"
+          class="relative flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-cyan-950/70 hover:bg-cyan-900/80 border border-cyan-500/40 text-xs font-bold text-cyan-200 transition active:scale-95 min-h-[36px]">
+          <span>💬</span>
+          <span class="hidden sm:inline">Chat</span>
+          <span id="chat-unread-badge" class="hidden -top-1.5 -right-1.5 min-w-[18px] h-[18px] px-1 rounded-full bg-rose-500 text-white font-display font-black text-[10px] flex items-center justify-center shadow">
+            0
+          </span>
+        </button>
+
+        <button id="btn-sound-toggle" type="button" title="Toggle Sound Effects"
+          class="flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700/80 text-xs font-semibold text-slate-200 transition active:scale-95 min-h-[36px]">
+          <span id="sound-icon">🔊</span>
+        </button>
+
+        <button id="btn-back-menu" type="button"
+          class="hidden px-2.5 py-1.5 rounded-xl bg-rose-950/70 hover:bg-rose-900/80 border border-rose-500/40 text-xs font-bold text-rose-200 transition active:scale-95 min-h-[36px]">
+          Menu
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-3 sm:px-6 py-5 sm:py-8">
+
+    <!-- =================================================================== -->
+    <!-- VIEW 1: MAIN MENU                                                   -->
+    <!-- =================================================================== -->
+    <section id="view-main-menu" class="min-h-[76dvh] flex flex-col items-center justify-center text-center space-y-6">
+      <div class="space-y-3 max-w-3xl px-2">
+        <!-- Custom Emblem Logo -->
+        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-400/35 text-cyan-300 text-[11px] font-bold uppercase tracking-widest">
+          <svg class="w-4 h-4 text-amber-300" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2l2.9 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l7.1-1.01L12 2z" />
+          </svg>
+          <span>Multiverse Draft & AI Showdown</span>
+        </div>
+
+        <h1 class="font-display font-black text-3xl sm:text-5xl md:text-6xl tracking-tight leading-tight text-white">
+          ANIME AUCTION <span class="bg-gradient-to-r from-cyan-300 via-sky-400 to-rose-400 bg-clip-text text-transparent">ARENA</span>
+        </h1>
+
+        <div class="pt-1 flex flex-wrap items-center justify-center gap-2">
+          <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-900/90 border border-amber-400/40 shadow-lg shadow-amber-500/10">
+            <span class="text-[10px] font-bold uppercase tracking-widest text-slate-400">Created By</span>
+            <span class="font-display font-extrabold text-xs sm:text-base tracking-widest text-amber-300">
+              DIVYANSH BHATT
+            </span>
+          </div>
+
+          <button id="menu-account-trigger" type="button"
+            class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-cyan-950/75 hover:bg-cyan-900/80 border border-cyan-400/40 text-xs font-bold text-cyan-200 transition">
+            <span>🔐</span>
+            <span id="menu-account-status-label">Play as Guest / Gmail / Browser</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Colorful Theme Swatches -->
+      <div class="flex flex-wrap items-center justify-center gap-2">
+        <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Theme:</span>
+        <button type="button" data-theme-choice="neon" class="theme-chip px-3 py-1 rounded-full text-[11px] font-bold bg-cyan-500/20 border border-cyan-400/50 text-cyan-200">⚡ Neon Cyber</button>
+        <button type="button" data-theme-choice="sunset" class="theme-chip px-3 py-1 rounded-full text-[11px] font-bold bg-rose-500/15 border border-rose-400/40 text-rose-200">🌅 Sunset Samurai</button>
+        <button type="button" data-theme-choice="emerald" class="theme-chip px-3 py-1 rounded-full text-[11px] font-bold bg-emerald-500/15 border border-emerald-400/40 text-emerald-200">🌿 Emerald Arcade</button>
+        <button type="button" data-theme-choice="solar" class="theme-chip px-3 py-1 rounded-full text-[11px] font-bold bg-amber-500/15 border border-amber-400/40 text-amber-200">☀️ Solar Gold</button>
+      </div>
+
+      <!-- 4 Core Menu Options + Update Logs -->
+      <div class="w-full max-w-md flex flex-col gap-3.5 px-1">
+        <button id="menu-btn-play" type="button"
+          class="w-full min-h-[54px] py-4 px-6 rounded-2xl bg-gradient-to-r from-cyan-400 via-sky-400 to-blue-500 hover:brightness-110 text-slate-950 font-display font-black text-base sm:text-lg tracking-wider uppercase shadow-xl shadow-cyan-500/25 transition active:scale-[0.99] flex items-center justify-center gap-3">
+          <span>▶</span>
+          <span>PLAY</span>
+        </button>
+
+        <button id="menu-btn-leaderboard" type="button"
+          class="w-full min-h-[48px] py-3.5 px-6 rounded-2xl glass-panel hover:border-amber-400/50 text-amber-300 font-display font-bold text-sm sm:text-base tracking-wider uppercase transition active:scale-[0.99] flex items-center justify-center gap-3">
+          <span>🏆</span>
+          <span>LEADERBOARD</span>
+        </button>
+
+        <button id="menu-btn-howtoplay" type="button"
+          class="w-full min-h-[48px] py-3.5 px-6 rounded-2xl glass-panel hover:border-cyan-400/50 text-cyan-200 font-display font-bold text-sm sm:text-base tracking-wider uppercase transition active:scale-[0.99] flex items-center justify-center gap-3">
+          <span>📖</span>
+          <span>HOW TO PLAY</span>
+        </button>
+
+        <button id="menu-btn-exit" type="button"
+          class="w-full min-h-[48px] py-3.5 px-6 rounded-2xl glass-panel hover:border-rose-400/50 text-rose-300 font-display font-bold text-sm sm:text-base tracking-wider uppercase transition active:scale-[0.99] flex items-center justify-center gap-3">
+          <span>⏻</span>
+          <span>EXIT</span>
+        </button>
+
+        <button id="menu-btn-updates" type="button"
+          class="w-full min-h-[42px] py-2.5 px-5 rounded-xl bg-slate-900/80 hover:bg-slate-800/90 border border-slate-700/80 text-slate-300 font-display font-bold text-xs tracking-wider uppercase transition flex items-center justify-center gap-2">
+          <span>📋</span>
+          <span>UPDATE LOGS (v5.0)</span>
+        </button>
+      </div>
+
+      <p class="text-xs text-slate-400 max-w-lg px-2">
+        Play immediately as Guest, link Gmail or Browser Account, invite Friends to servers, and let the Fair AI Judge score your 5-card squad!
+      </p>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- VIEW 2: SERVER MODE SELECTION (PUBLIC / PRIVATE / VS BOT)           -->
+    <!-- =================================================================== -->
+    <section id="view-mode-select" class="hidden max-w-4xl mx-auto space-y-6">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div>
+          <span class="text-xs font-bold uppercase tracking-widest text-cyan-400">Step 1 • Choose Server Type</span>
+          <h2 class="font-display font-black text-2xl sm:text-3xl text-white">Select Matchmaking Mode</h2>
+        </div>
+        <div class="flex flex-wrap items-center gap-2 text-xs">
+          <div class="px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-700">
+            Player: <strong id="mode-username-display" class="text-cyan-300">Guest</strong>
+            <span id="mode-playerid-display" class="text-slate-400 font-mono text-[10px] ml-1"></span>
+          </div>
+          <button id="btn-change-username" type="button"
+            class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold transition min-h-[34px]">
+            Edit / Account
+          </button>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <button id="mode-card-public" type="button"
+          class="glass-panel hover:glass-card-active rounded-3xl p-6 text-left transition group flex flex-col justify-between space-y-5 min-h-[210px]">
+          <div class="space-y-2.5">
+            <div class="w-12 h-12 rounded-2xl bg-cyan-500/15 border border-cyan-400/35 flex items-center justify-center text-2xl group-hover:scale-105 transition">
+              🌐
+            </div>
+            <h3 class="font-display font-extrabold text-xl text-white group-hover:text-cyan-300 transition">PUBLIC</h3>
+            <p class="text-xs sm:text-sm text-slate-400 leading-relaxed">
+              Automatically joins an open public server if one is available, or spins up a fresh public server for you.
+            </p>
+          </div>
+          <span class="text-xs font-display font-bold uppercase tracking-wider text-cyan-300">Join / Host Public →</span>
+        </button>
+
+        <button id="mode-card-private" type="button"
+          class="glass-panel hover:glass-card-active rounded-3xl p-6 text-left transition group flex flex-col justify-between space-y-5 min-h-[210px]">
+          <div class="space-y-2.5">
+            <div class="w-12 h-12 rounded-2xl bg-amber-500/15 border border-amber-400/35 flex items-center justify-center text-2xl group-hover:scale-105 transition">
+              🔒
+            </div>
+            <h3 class="font-display font-extrabold text-xl text-white group-hover:text-amber-300 transition">PRIVATE</h3>
+            <p class="text-xs sm:text-sm text-slate-400 leading-relaxed">
+              Create a new private server with a 5-character invite code, or enter a friend's room code to join theirs.
+            </p>
+          </div>
+          <span class="text-xs font-display font-bold uppercase tracking-wider text-amber-300">Create or Enter Code →</span>
+        </button>
+
+        <button id="mode-card-bot" type="button"
+          class="glass-panel hover:glass-card-active rounded-3xl p-6 text-left transition group flex flex-col justify-between space-y-5 min-h-[210px]">
+          <div class="space-y-2.5">
+            <div class="w-12 h-12 rounded-2xl bg-rose-500/15 border border-rose-400/35 flex items-center justify-center text-2xl group-hover:scale-105 transition">
+              🤖
+            </div>
+            <h3 class="font-display font-extrabold text-xl text-white group-hover:text-rose-300 transition">VS BOT</h3>
+            <p class="text-xs sm:text-sm text-slate-400 leading-relaxed">
+              Jump straight into an instant match against smart AI rivals with zero waiting time.
+            </p>
+          </div>
+          <span class="text-xs font-display font-bold uppercase tracking-wider text-rose-300">Play vs AI Bots →</span>
+        </button>
+      </div>
+
+      <!-- Private Room Create / Join Panel -->
+      <div id="private-room-panel" class="hidden glass-card-active rounded-3xl p-5 sm:p-6 space-y-4">
+        <div class="flex items-center justify-between">
+          <h3 class="font-display font-bold text-base sm:text-lg text-amber-300">Private Server Options</h3>
+          <button id="btn-close-private-panel" type="button" class="text-xs text-slate-400 hover:text-white px-2 py-1">✕ Close</button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="p-4 rounded-2xl bg-slate-950/70 border border-slate-800 space-y-3">
+            <div class="text-xs font-bold uppercase tracking-wider text-cyan-300">Create New Private Server</div>
+            <p class="text-xs text-slate-400">Generates a unique 5-character room code you can share or invite friends to.</p>
+            <button id="btn-create-private-room" type="button"
+              class="w-full min-h-[44px] py-2.5 px-4 rounded-xl bg-gradient-to-r from-amber-300 to-yellow-400 text-slate-950 font-display font-extrabold text-xs uppercase tracking-wider transition active:scale-[0.99]">
+              Create Private Server
+            </button>
+          </div>
+
+          <div class="p-4 rounded-2xl bg-slate-950/70 border border-slate-800 space-y-3">
+            <label for="private-join-code-input" class="block text-xs font-bold uppercase tracking-wider text-emerald-300">
+              Join Existing Private Server
+            </label>
+            <div class="flex flex-col sm:flex-row gap-2">
+              <input id="private-join-code-input" type="text" maxlength="8" placeholder="5-CHAR CODE"
+                class="flex-1 min-h-[44px] rounded-xl bg-slate-900 border border-slate-700 px-3.5 py-2 font-display font-bold uppercase tracking-widest text-sm text-white focus:outline-none focus:border-emerald-400" />
+              <button id="btn-join-private-room" type="button"
+                class="min-h-[44px] px-4 py-2 rounded-xl bg-emerald-400 hover:bg-emerald-300 text-slate-950 font-display font-extrabold text-xs uppercase tracking-wider transition shrink-0">
+                Join Code
+              </button>
+            </div>
+            <p id="private-code-error" class="hidden text-xs text-rose-400 font-semibold"></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- VIEW 3: SERVER LOBBY (1v1..4v4, $20/$50/$100, CATEGORIES, COMPARE)  -->
+    <!-- =================================================================== -->
+    <section id="view-server-lobby" class="hidden max-w-5xl mx-auto space-y-6">
+      <div class="glass-panel rounded-3xl p-5 sm:p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div class="space-y-1">
+          <div class="flex flex-wrap items-center gap-2">
+            <span id="lobby-mode-badge" class="px-2.5 py-0.5 rounded-full text-[11px] font-display font-bold uppercase bg-cyan-500/20 text-cyan-300 border border-cyan-400/40">
+              PUBLIC
+            </span>
+            <span class="text-xs text-slate-400">Server Code:</span>
+            <button id="btn-copy-room-code" type="button" title="Copy Room Code"
+              class="px-2.5 py-0.5 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-700 font-display font-extrabold text-xs text-amber-300 tracking-widest">
+              <span id="lobby-room-code">-----</span> 📋
+            </button>
+          </div>
+          <h2 class="font-display font-black text-xl sm:text-2xl text-white">Match Settings & Team Lobby</h2>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-2">
+          <button id="btn-lobby-invite-friend" type="button"
+            class="px-3.5 py-2 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-400/40 text-xs font-bold text-emerald-200 transition min-h-[40px]">
+            + Invite Friend
+          </button>
+          <button id="btn-lobby-add-bot" type="button"
+            class="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-600 text-xs font-bold text-cyan-200 transition min-h-[40px]">
+            + Add AI Bot
+          </button>
+          <button id="btn-start-auction" type="button"
+            class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-400 to-cyan-300 hover:brightness-110 text-slate-950 font-display font-black text-xs sm:text-sm uppercase tracking-wider shadow-lg shadow-emerald-500/20 transition active:scale-95 min-h-[40px]">
+            Start Auction →
+          </button>
+        </div>
+      </div>
+
+      <!-- Configuration Controls -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <!-- Format: 1v1, 2v2, 3v3, 4v4 -->
+        <div class="glass-panel rounded-3xl p-4 sm:p-5 space-y-2.5">
+          <label class="block text-[11px] font-bold uppercase tracking-wider text-cyan-300">
+            1. Team Format (Players)
+          </label>
+          <div id="format-selector-group" class="grid grid-cols-2 gap-2">
+            <button type="button" data-format="1v1" class="format-btn py-2.5 px-2 rounded-xl font-display font-bold text-xs border bg-cyan-400 text-slate-950 border-cyan-300">1v1 (2p)</button>
+            <button type="button" data-format="2v2" class="format-btn py-2.5 px-2 rounded-xl font-display font-bold text-xs border bg-slate-900 text-slate-300 border-slate-700">2v2 (4p)</button>
+            <button type="button" data-format="3v3" class="format-btn py-2.5 px-2 rounded-xl font-display font-bold text-xs border bg-slate-900 text-slate-300 border-slate-700">3v3 (6p)</button>
+            <button type="button" data-format="4v4" class="format-btn py-2.5 px-2 rounded-xl font-display font-bold text-xs border bg-slate-900 text-slate-300 border-slate-700">4v4 (8p)</button>
+          </div>
+          <p class="text-[11px] text-slate-400">Max 5 cards per player.</p>
+        </div>
+
+        <!-- Purse Level: $20, $50, $100 -->
+        <div class="glass-panel rounded-3xl p-4 sm:p-5 space-y-2.5">
+          <label class="block text-[11px] font-bold uppercase tracking-wider text-amber-300">
+            2. Starting Purse (Equal)
+          </label>
+          <div id="purse-selector-group" class="grid grid-cols-3 gap-2">
+            <button type="button" data-purse="20" class="purse-btn py-2.5 px-2 rounded-xl font-display font-extrabold text-xs border bg-slate-900 text-slate-300 border-slate-700">$20</button>
+            <button type="button" data-purse="50" class="purse-btn py-2.5 px-2 rounded-xl font-display font-extrabold text-xs border bg-amber-300 text-slate-950 border-amber-200">$50</button>
+            <button type="button" data-purse="100" class="purse-btn py-2.5 px-2 rounded-xl font-display font-extrabold text-xs border bg-slate-900 text-slate-300 border-slate-700">$100</button>
+          </div>
+          <p class="text-[11px] text-slate-400">Every player starts with identical cash.</p>
+        </div>
+
+        <!-- Category: Anime / Cartoon Fiction / Webseries Fiction / Mix -->
+        <div class="glass-panel rounded-3xl p-4 sm:p-5 space-y-2.5">
+          <label for="lobby-category-select" class="block text-[11px] font-bold uppercase tracking-wider text-rose-300">
+            3. Roster Category (200 Total)
+          </label>
+          <select id="lobby-category-select"
+            class="w-full min-h-[42px] rounded-xl bg-slate-950 border border-slate-700 px-3 py-2 text-xs font-bold text-white focus:outline-none focus:border-rose-400">
+            <option value="anime" selected>Anime (80 Fighters)</option>
+            <option value="cartoon">Cartoon Fiction — MCU, DCU & More (60)</option>
+            <option value="webseries">Webseries Fiction — Breaking Bad, ST & More (60)</option>
+            <option value="mix">Mix — All Categories Combined (200)</option>
+          </select>
+          <p class="text-[11px] text-slate-400">Includes photos, show titles & 5 stats.</p>
+        </div>
+
+        <!-- Comparison Mode Toggle -->
+        <div class="glass-panel rounded-3xl p-4 sm:p-5 space-y-2.5">
+          <label class="block text-[11px] font-bold uppercase tracking-wider text-emerald-300">
+            4. AI Judge Comparison
+          </label>
+          <button id="btn-toggle-category-compare" type="button"
+            class="w-full min-h-[42px] px-3 py-2 rounded-xl bg-emerald-500/20 border border-emerald-400/50 text-emerald-200 font-display font-bold text-xs flex items-center justify-between">
+            <span id="compare-mode-label">Category-Wise: ON</span>
+            <span id="compare-mode-pill" class="px-2 py-0.5 rounded bg-emerald-400 text-slate-950 text-[10px] font-black">5 STATS</span>
+          </button>
+          <p id="compare-mode-desc" class="text-[11px] text-slate-400">
+            Compares Strength, Speed, Durability, IQ & Ability individually.
+          </p>
+        </div>
+      </div>
+
+      <!-- Team Rosters Preview -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="glass-panel rounded-3xl p-5 space-y-3">
+          <div class="flex items-center justify-between">
+            <h3 class="font-display font-bold text-sm uppercase tracking-wider text-cyan-300">Team Alpha</h3>
+            <span id="team-alpha-count" class="text-xs font-semibold text-slate-400">0 slots</span>
+          </div>
+          <div id="team-alpha-slots" class="space-y-2"></div>
+        </div>
+
+        <div class="glass-panel rounded-3xl p-5 space-y-3">
+          <div class="flex items-center justify-between">
+            <h3 class="font-display font-bold text-sm uppercase tracking-wider text-rose-300">Team Omega</h3>
+            <span id="team-omega-count" class="text-xs font-semibold text-slate-400">0 slots</span>
+          </div>
+          <div id="team-omega-slots" class="space-y-2"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- VIEW 4: LIVE AUCTION ARENA                                          -->
+    <!-- =================================================================== -->
+    <section id="view-arena" class="hidden space-y-5">
+      <!-- Top Auction Telemetry Bar -->
+      <div class="glass-panel rounded-3xl p-4 flex flex-wrap items-center justify-between gap-3">
+        <div class="flex items-center gap-3">
+          <span class="px-3 py-1 rounded-xl bg-cyan-500/15 border border-cyan-400/30 font-display font-bold text-xs text-cyan-300">
+            LOT <span id="arena-lot-num">1</span>/<span id="arena-lot-total">20</span>
+          </span>
+          <span id="arena-category-tag" class="px-2.5 py-1 rounded-xl bg-slate-900 border border-slate-700 text-xs font-bold text-amber-300 uppercase">
+            ANIME
+          </span>
+          <span id="arena-compare-tag" class="hidden sm:inline-block px-2.5 py-1 rounded-xl bg-slate-900 border border-slate-700 text-xs font-semibold text-emerald-300">
+            Category-Wise AI
+          </span>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <div id="arena-free-claim-banner" class="hidden px-3 py-1 rounded-xl bg-amber-400/20 border border-amber-400 text-amber-200 text-xs font-bold">
+            ⚡ Rival Full! Remaining slots are FREE — No Passing Allowed!
+          </div>
+          <div id="arena-timer-box" class="px-4 py-1.5 rounded-2xl bg-slate-900 border border-cyan-400/40 flex items-center gap-2">
+            <span class="text-xs uppercase font-bold text-slate-400">Timer</span>
+            <span id="arena-timer-val" class="font-display font-black text-lg text-cyan-300">12s</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Stage: Character Spotlight + Bid Controls -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+        <!-- Character Spotlight Card -->
+        <div class="lg:col-span-7 glass-card-active rounded-3xl p-5 sm:p-6 flex flex-col justify-between space-y-5">
+          <div class="flex flex-col sm:flex-row gap-5 items-center sm:items-start">
+            <div class="relative shrink-0">
+              <img id="char-portrait-img" src="" alt="Character Portrait"
+                class="w-32 h-32 sm:w-36 sm:h-36 rounded-2xl object-cover border-2 border-cyan-400/40 bg-slate-900 shadow-xl" />
+              <span id="char-tier-badge" class="absolute -bottom-2 left-1/2 -translate-x-1/2 px-2.5 py-0.5 rounded-full bg-amber-400 text-slate-950 font-display font-black text-[10px] uppercase whitespace-nowrap shadow">
+                S-TIER
+              </span>
+            </div>
+
+            <div class="flex-1 text-center sm:text-left space-y-2 min-w-0 w-full">
+              <div class="text-xs font-bold uppercase tracking-wider text-rose-300 truncate" id="char-source-title">
+                Source Title
+              </div>
+              <h2 id="char-name-heading" class="font-display font-black text-2xl sm:text-3xl text-white truncate">
+                Character Name
+              </h2>
+              <p id="char-ability-desc" class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                Signature power & combat profile.
+              </p>
+              <div class="pt-1 flex flex-wrap items-center justify-center sm:justify-start gap-2 text-xs">
+                <span class="px-2.5 py-1 rounded-lg bg-slate-900 border border-slate-700 text-slate-300">
+                  Base: <strong id="char-base-price" class="text-amber-300 font-display">$3</strong>
+                </span>
+                <span class="px-2.5 py-1 rounded-lg bg-slate-900 border border-slate-700 text-slate-300">
+                  OVR: <strong id="char-ovr-score" class="text-cyan-300 font-display">88</strong>
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 5 Core Stats Grid -->
+          <div class="grid grid-cols-2 sm:grid-cols-5 gap-2.5">
+            <div class="p-2.5 rounded-2xl bg-slate-950/80 border border-slate-800 text-center">
+              <div class="text-[10px] font-bold uppercase text-rose-400">Strength</div>
+              <div id="stat-strength" class="font-display font-black text-base text-white mt-0.5">90</div>
+            </div>
+            <div class="p-2.5 rounded-2xl bg-slate-950/80 border border-slate-800 text-center">
+              <div class="text-[10px] font-bold uppercase text-cyan-400">Speed</div>
+              <div id="stat-speed" class="font-display font-black text-base text-white mt-0.5">88</div>
+            </div>
+            <div class="p-2.5 rounded-2xl bg-slate-950/80 border border-slate-800 text-center">
+              <div class="text-[10px] font-bold uppercase text-emerald-400">Durability</div>
+              <div id="stat-durability" class="font-display font-black text-base text-white mt-0.5">85</div>
+            </div>
+            <div class="p-2.5 rounded-2xl bg-slate-950/80 border border-slate-800 text-center">
+              <div class="text-[10px] font-bold uppercase text-purple-400">IQ</div>
+              <div id="stat-iq" class="font-display font-black text-base text-white mt-0.5">84</div>
+            </div>
+            <div class="col-span-2 sm:col-span-1 p-2.5 rounded-2xl bg-slate-950/80 border border-slate-800 text-center">
+              <div class="text-[10px] font-bold uppercase text-amber-300">Ability</div>
+              <div id="stat-ability" class="font-display font-black text-base text-white mt-0.5">92</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bidding Console -->
+        <div class="lg:col-span-5 glass-panel rounded-3xl p-5 sm:p-6 flex flex-col justify-between space-y-4">
+          <div class="space-y-3">
+            <div class="flex items-center justify-between text-xs text-slate-400">
+              <span>Current Highest Bid</span>
+              <span id="arena-highest-bidder" class="font-bold text-cyan-300">No bids yet</span>
+            </div>
+
+            <div class="p-4 rounded-2xl bg-slate-950/90 border border-slate-800 flex items-baseline justify-between">
+              <span class="text-xs font-bold uppercase text-slate-400">Bid Price</span>
+              <span id="arena-current-bid" class="font-display font-black text-3xl sm:text-4xl text-amber-300">$3</span>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2.5 text-xs">
+              <div class="p-3 rounded-2xl bg-slate-900/80 border border-slate-800">
+                <div class="text-[10px] text-slate-400 uppercase">Your Purse</div>
+                <div id="arena-my-purse" class="font-display font-extrabold text-base text-emerald-300">$50</div>
+              </div>
+              <div class="p-3 rounded-2xl bg-slate-900/80 border border-slate-800">
+                <div class="text-[10px] text-slate-400 uppercase">Your Cards</div>
+                <div id="arena-my-cards" class="font-display font-extrabold text-base text-cyan-300">0 / 5</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Bid & Custom Bid Buttons -->
+          <div class="space-y-2.5">
+            <div class="grid grid-cols-3 gap-2">
+              <button type="button" data-inc="1" class="quick-bid-btn min-h-[44px] rounded-xl bg-slate-800 hover:bg-slate-700 border border-cyan-500/35 font-display font-extrabold text-xs text-cyan-200 transition active:scale-95">
+                +$1
+              </button>
+              <button type="button" data-inc="3" class="quick-bid-btn min-h-[44px] rounded-xl bg-slate-800 hover:bg-slate-700 border border-cyan-500/35 font-display font-extrabold text-xs text-cyan-200 transition active:scale-95">
+                +$3
+              </button>
+              <button type="button" data-inc="5" class="quick-bid-btn min-h-[44px] rounded-xl bg-slate-800 hover:bg-slate-700 border border-cyan-500/35 font-display font-extrabold text-xs text-cyan-200 transition active:scale-95">
+                +$5
+              </button>
+            </div>
+
+            <div class="flex gap-2">
+              <input id="custom-bid-input" type="number" min="1" placeholder="Custom $"
+                class="w-28 min-h-[44px] rounded-xl bg-slate-950 border border-slate-700 px-3 py-2 font-display font-bold text-sm text-white focus:outline-none focus:border-amber-400" />
+              <button id="btn-place-custom-bid" type="button"
+                class="flex-1 min-h-[44px] rounded-xl bg-gradient-to-r from-amber-300 to-yellow-400 hover:brightness-110 text-slate-950 font-display font-black text-xs uppercase tracking-wider transition active:scale-95">
+                Place Bid
+              </button>
+            </div>
+
+            <button id="btn-pass-lot" type="button"
+              class="w-full min-h-[44px] rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 font-display font-bold text-xs uppercase tracking-wider text-slate-300 transition active:scale-95">
+              Pass Lot
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Live Rosters Strip During Auction -->
+      <div id="arena-teams-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3.5"></div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- VIEW 5: FAIR AI JUDGE RESULTS & TEAM COMPARISON                     -->
+    <!-- =================================================================== -->
+    <section id="view-results" class="hidden max-w-5xl mx-auto space-y-6">
+      <div class="glass-card-active rounded-3xl p-6 text-center space-y-2">
+        <span class="text-xs font-bold uppercase tracking-widest text-amber-300">Fair AI Judge Verdict</span>
+        <h2 id="results-winner-banner" class="font-display font-black text-2xl sm:text-4xl text-white">
+          Team Alpha Wins!
+        </h2>
+        <p id="results-summary-text" class="text-xs sm:text-sm text-slate-300 max-w-2xl mx-auto"></p>
+      </div>
+
+      <div id="results-ai-breakdown" class="glass-panel rounded-3xl p-5 sm:p-6 space-y-4"></div>
+
+      <div id="results-rosters-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+
+      <div class="flex flex-wrap items-center justify-center gap-3">
+        <button id="btn-results-play-again" type="button"
+          class="min-h-[46px] px-6 py-3 rounded-2xl bg-gradient-to-r from-cyan-400 to-blue-500 text-slate-950 font-display font-black text-xs sm:text-sm uppercase tracking-wider">
+          Play Another Match
+        </button>
+        <button id="btn-results-leaderboard" type="button"
+          class="min-h-[46px] px-6 py-3 rounded-2xl glass-panel border border-amber-400/40 text-amber-300 font-display font-bold text-xs sm:text-sm uppercase tracking-wider">
+          View Leaderboard
+        </button>
+        <button id="btn-results-menu" type="button"
+          class="min-h-[46px] px-6 py-3 rounded-2xl glass-panel text-slate-200 font-display font-bold text-xs sm:text-sm uppercase tracking-wider">
+          Main Menu
+        </button>
+      </div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- VIEW 6: REAL-PLAYERS-ONLY LEADERBOARD                               -->
+    <!-- =================================================================== -->
+    <section id="view-leaderboard" class="hidden max-w-4xl mx-auto space-y-5">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div>
+          <span class="text-xs font-bold uppercase tracking-widest text-amber-300">Real Players Only</span>
+          <h2 class="font-display font-black text-2xl sm:text-3xl text-white">Global & Local Standings</h2>
+          <p class="text-xs text-slate-400">Bot accounts are excluded — only human players & linked accounts appear here.</p>
+        </div>
+        <button id="btn-lb-back" type="button"
+          class="min-h-[40px] px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-xs font-bold text-cyan-200 self-start sm:self-auto">
+          ← Back to Menu
+        </button>
+      </div>
+
+      <div class="glass-panel rounded-3xl overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse text-xs sm:text-sm">
+            <thead>
+              <tr class="border-b border-slate-800 bg-slate-950/80 text-[11px] font-display uppercase text-slate-400">
+                <th class="py-3.5 px-4">Rank</th>
+                <th class="py-3.5 px-4">Player</th>
+                <th class="py-3.5 px-4">Wins</th>
+                <th class="py-3.5 px-4">Matches</th>
+                <th class="py-3.5 px-4">AI Score</th>
+              </tr>
+            </thead>
+            <tbody id="leaderboard-tbody" class="divide-y divide-slate-800/70"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- VIEW 7: HOW TO PLAY                                                 -->
+    <!-- =================================================================== -->
+    <section id="view-howtoplay" class="hidden max-w-4xl mx-auto space-y-5">
+      <div class="flex items-center justify-between gap-3">
+        <div>
+          <span class="text-xs font-bold uppercase tracking-widest text-cyan-300">Official Rulebook</span>
+          <h2 class="font-display font-black text-2xl sm:text-3xl text-white">How to Play</h2>
+        </div>
+        <button id="btn-htp-back" type="button"
+          class="min-h-[40px] px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-xs font-bold text-cyan-200">
+          ← Back to Menu
+        </button>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs sm:text-sm text-slate-300">
+        <div class="glass-panel rounded-3xl p-5 space-y-2">
+          <h3 class="font-display font-bold text-cyan-300 uppercase text-sm">1. Guest, Gmail & Browser Accounts</h3>
+          <p>Start right away as a <strong>Guest</strong> or link your <strong>Gmail</strong> / <strong>Browser Account</strong> from the top bar so your ID, friends, and leaderboard progress stay saved.</p>
+        </div>
+        <div class="glass-panel rounded-3xl p-5 space-y-2">
+          <h3 class="font-display font-bold text-amber-300 uppercase text-sm">2. Equal Purses & 5-Card Cap</h3>
+          <p>Every player receives an equal starting purse (<strong>$20</strong>, <strong>$50</strong>, or <strong>$100</strong>) and can buy up to <strong>5 characters maximum</strong>.</p>
+        </div>
+        <div class="glass-panel rounded-3xl p-5 space-y-2">
+          <h3 class="font-display font-bold text-emerald-300 uppercase text-sm">3. Full Team = Free Remaining Slots</h3>
+          <p>Once a player or side completes all 5 cards, remaining players can claim open slots for <strong>$0 (Free)</strong> and cannot pass while their squad still has empty spots.</p>
+        </div>
+        <div class="glass-panel rounded-3xl p-5 space-y-2">
+          <h3 class="font-display font-bold text-rose-300 uppercase text-sm">4. Fair AI Judge & 200 Fighters</h3>
+          <p>Choose <strong>Anime</strong>, <strong>Cartoon Fiction</strong>, <strong>Webseries Fiction</strong>, or <strong>Mix</strong>. The AI Judge scores teams fairly either <strong>Category-Wise</strong> or by <strong>Total Power Level</strong>.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- VIEW 8: UPDATE LOGS                                                 -->
+    <!-- =================================================================== -->
+    <section id="view-updates" class="hidden max-w-4xl mx-auto space-y-5">
+      <div class="flex items-center justify-between gap-3">
+        <div>
+          <span class="text-xs font-bold uppercase tracking-widest text-amber-300">Development History</span>
+          <h2 class="font-display font-black text-2xl sm:text-3xl text-white">Update Logs</h2>
+        </div>
+        <button id="btn-upd-back" type="button"
+          class="min-h-[40px] px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-xs font-bold text-cyan-200">
+          ← Back to Menu
+        </button>
+      </div>
+
+      <div id="update-logs-container" class="space-y-4"></div>
+    </section>
+
+  </main>
+
+  <!-- ===================================================================== -->
+  <!-- ACCOUNT MODAL (GUEST PLAY + GMAIL SIGN UP/LOGIN + BROWSER ACCOUNT)    -->
+  <!-- ===================================================================== -->
+  <div id="account-modal" class="hidden fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="glass-card-active max-w-md w-full rounded-3xl p-6 space-y-4 max-h-[92dvh] overflow-y-auto">
+      <div class="flex items-start justify-between gap-2">
+        <div>
+          <span class="text-[11px] font-bold uppercase tracking-widest text-cyan-400">Optional Account & Save</span>
+          <h3 class="font-display font-black text-xl text-white">Guest, Gmail or Browser</h3>
+          <p class="text-xs text-slate-400 mt-0.5">No sign-up required to play. Link Gmail or Browser to save progress.</p>
+        </div>
+        <button id="btn-close-account-modal" type="button"
+          class="w-8 h-8 rounded-xl bg-slate-900 border border-slate-700 text-slate-300 text-xs font-bold">✕</button>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+        <button id="btn-play-as-guest" type="button"
+          class="min-h-[44px] px-3 py-2.5 rounded-2xl bg-slate-900 hover:bg-slate-800 border border-slate-600 text-xs font-display font-bold text-white flex items-center justify-center gap-2">
+          <span>🎭</span>
+          <span>Play as Guest</span>
+        </button>
+        <button id="btn-connect-browser-account" type="button"
+          class="min-h-[44px] px-3 py-2.5 rounded-2xl bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-400/50 text-xs font-display font-bold text-emerald-200 flex items-center justify-center gap-2">
+          <span>🌐</span>
+          <span>Connect Browser</span>
+        </button>
+      </div>
+
+      <div class="grid grid-cols-2 gap-2 p-1 rounded-2xl bg-slate-950 border border-slate-800">
+        <button id="tab-auth-login" type="button"
+          class="py-2 rounded-xl font-display font-bold text-xs uppercase bg-cyan-500/20 text-cyan-300 border border-cyan-400/40">
+          Gmail Log In
+        </button>
+        <button id="tab-auth-signup" type="button"
+          class="py-2 rounded-xl font-display font-bold text-xs uppercase text-slate-400 hover:text-white">
+          Gmail Sign Up
+        </button>
+      </div>
+
+      <div id="auth-login-pane" class="space-y-3">
+        <div>
+          <label for="login-identifier" class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Gmail, Username, or Player ID</label>
+          <input id="login-identifier" type="text" maxlength="60" placeholder="you@gmail.com or Username"
+            class="w-full min-h-[42px] rounded-xl bg-slate-950 border border-slate-700 px-3.5 py-2 text-sm font-bold text-white focus:outline-none focus:border-cyan-400" />
+        </div>
+        <div>
+          <label for="login-pin" class="block text-[10px] font-bold uppercase text-slate-400 mb-1">PIN / Passcode</label>
+          <input id="login-pin" type="password" maxlength="16" placeholder="Enter PIN"
+            class="w-full min-h-[42px] rounded-xl bg-slate-950 border border-slate-700 px-3.5 py-2 text-sm font-bold text-white focus:outline-none focus:border-cyan-400" />
+        </div>
+        <p id="auth-login-error" class="hidden text-xs font-semibold text-rose-400"></p>
+        <button id="btn-submit-login" type="button"
+          class="w-full min-h-[44px] py-3 rounded-xl bg-gradient-to-r from-cyan-400 to-sky-300 text-slate-950 font-display font-extrabold text-xs uppercase tracking-wider">
+          Log In & Restore
+        </button>
+      </div>
+
+      <div id="auth-signup-pane" class="hidden space-y-3">
+        <div>
+          <label for="signup-gmail" class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Gmail Address (@gmail.com)</label>
+          <input id="signup-gmail" type="email" maxlength="60" placeholder="player@gmail.com"
+            class="w-full min-h-[42px] rounded-xl bg-slate-950 border border-slate-700 px-3.5 py-2 text-sm font-bold text-white focus:outline-none focus:border-amber-400" />
+        </div>
+        <div>
+          <label for="signup-username" class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Username</label>
+          <input id="signup-username" type="text" maxlength="18" placeholder="Your Username"
+            class="w-full min-h-[42px] rounded-xl bg-slate-950 border border-slate-700 px-3.5 py-2 text-sm font-bold text-white focus:outline-none focus:border-amber-400" />
+        </div>
+        <div>
+          <label for="signup-pin" class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Create PIN (Min 4 chars)</label>
+          <input id="signup-pin" type="password" maxlength="16" placeholder="1234"
+            class="w-full min-h-[42px] rounded-xl bg-slate-950 border border-slate-700 px-3.5 py-2 text-sm font-bold text-white focus:outline-none focus:border-amber-400" />
+        </div>
+        <p id="auth-signup-error" class="hidden text-xs font-semibold text-rose-400"></p>
+        <button id="btn-submit-signup" type="button"
+          class="w-full min-h-[44px] py-3 rounded-xl bg-gradient-to-r from-amber-300 to-yellow-400 text-slate-950 font-display font-extrabold text-xs uppercase tracking-wider">
+          Sign Up With Gmail
+        </button>
+      </div>
+
+      <div id="auth-active-session-box" class="hidden pt-3 border-t border-slate-800 flex items-center justify-between gap-2 text-xs">
+        <span id="auth-session-summary" class="text-emerald-300 font-bold truncate"></span>
+        <button id="btn-logout-account" type="button"
+          class="px-3 py-1.5 rounded-lg bg-rose-950/60 border border-rose-500/40 text-rose-200 font-bold shrink-0">
+          Log Out
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- DEVELOPER AUTH & CONSOLE MODALS (CODE: 15042010)                      -->
+  <!-- ===================================================================== -->
+  <div id="dev-auth-modal" class="hidden fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="glass-card-active max-w-sm w-full rounded-3xl p-6 border border-amber-400/50 space-y-4">
+      <div class="flex items-start justify-between gap-2">
+        <div>
+          <span class="text-[10px] font-bold uppercase tracking-widest text-amber-300">Developer Gate</span>
+          <h3 class="font-display font-black text-xl text-white">Enter Dev Code</h3>
+        </div>
+        <button id="btn-close-dev-auth" type="button"
+          class="w-8 h-8 rounded-xl bg-slate-900 border border-slate-700 text-slate-300 text-xs font-bold">✕</button>
+      </div>
+      <input id="dev-code-input" type="password" maxlength="20" placeholder="Passcode"
+        class="w-full min-h-[44px] rounded-xl bg-slate-950 border border-amber-400/40 px-3.5 py-2 font-display font-bold tracking-widest text-center text-sm text-amber-300 focus:outline-none" />
+      <p id="dev-auth-error" class="hidden text-xs font-semibold text-rose-400">Invalid code.</p>
+      <button id="btn-submit-dev-code" type="button"
+        class="w-full min-h-[44px] py-3 rounded-xl bg-gradient-to-r from-amber-300 to-orange-400 text-slate-950 font-display font-extrabold text-xs uppercase tracking-wider">
+        Unlock Developer Powers
+      </button>
+    </div>
+  </div>
+
+  <div id="dev-console-modal" class="hidden fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="glass-card-active max-w-2xl w-full rounded-3xl p-6 border border-amber-400/50 space-y-5 max-h-[90dvh] overflow-y-auto">
+      <div class="flex items-start justify-between gap-3 border-b border-slate-800 pb-3">
+        <div>
+          <span class="px-2.5 py-0.5 rounded bg-amber-400/20 border border-amber-400/40 text-[10px] font-display font-black uppercase text-amber-300">
+            DEV ACTIVE • 15042010
+          </span>
+          <h3 class="font-display font-black text-xl sm:text-2xl text-white mt-1">Developer Control Console</h3>
+        </div>
+        <div class="flex items-center gap-2">
+          <button id="btn-lock-dev-mode" type="button"
+            class="px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-700 text-[11px] font-bold text-slate-300">
+            Lock
+          </button>
+          <button id="btn-close-dev-console" type="button"
+            class="w-8 h-8 rounded-xl bg-slate-900 border border-slate-700 text-slate-300 text-xs font-bold">✕</button>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+        <button id="dev-btn-god-mode" type="button"
+          class="p-3 rounded-2xl bg-slate-950 border border-cyan-500/40 text-left hover:bg-slate-900">
+          <div class="text-[10px] font-bold uppercase text-slate-400">God / Admin</div>
+          <div id="dev-god-status" class="font-display font-extrabold text-xs text-cyan-300 mt-0.5">OFF</div>
+        </button>
+        <button id="dev-btn-bonus-purse" type="button"
+          class="p-3 rounded-2xl bg-slate-950 border border-amber-500/40 text-left hover:bg-slate-900">
+          <div class="text-[10px] font-bold uppercase text-slate-400">Bonus Cash</div>
+          <div class="font-display font-extrabold text-xs text-amber-300 mt-0.5">+$50 Purse</div>
+        </button>
+        <button id="dev-btn-boost-stats" type="button"
+          class="p-3 rounded-2xl bg-slate-950 border border-emerald-500/40 text-left hover:bg-slate-900">
+          <div class="text-[10px] font-bold uppercase text-slate-400">Current Lot</div>
+          <div class="font-display font-extrabold text-xs text-emerald-300 mt-0.5">+10 All Stats</div>
+        </button>
+        <button id="dev-btn-skip-lot" type="button"
+          class="p-3 rounded-2xl bg-slate-950 border border-rose-500/40 text-left hover:bg-slate-900">
+          <div class="text-[10px] font-bold uppercase text-slate-400">Auction Lot</div>
+          <div class="font-display font-extrabold text-xs text-rose-300 mt-0.5">Skip Lot</div>
+        </button>
+      </div>
+
+      <div class="p-4 rounded-2xl bg-slate-950/90 border border-slate-800 space-y-3">
+        <div class="text-xs font-display font-bold uppercase tracking-wider text-rose-300">
+          Ban / Unban Player by Username or ID
+        </div>
+        <div class="flex flex-col sm:flex-row gap-2">
+          <input id="dev-ban-username-input" type="text" maxlength="24" placeholder="Username or ID..."
+            class="flex-1 min-h-[42px] rounded-xl bg-slate-900 border border-slate-700 px-3 py-2 text-xs font-bold text-white focus:outline-none focus:border-rose-400" />
+          <input id="dev-ban-reason-input" type="text" maxlength="60" placeholder="Reason"
+            class="flex-1 min-h-[42px] rounded-xl bg-slate-900 border border-slate-700 px-3 py-2 text-xs text-white focus:outline-none focus:border-amber-400" />
+          <button id="dev-btn-ban-player" type="button"
+            class="min-h-[42px] px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-display font-extrabold text-xs uppercase shrink-0">
+            Ban
+          </button>
+        </div>
+        <div id="dev-banned-list" class="space-y-1.5 text-xs"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- FRIENDS & SERVER INVITES DRAWER                                      -->
+  <!-- ===================================================================== -->
+  <aside id="friends-drawer" class="hidden fixed inset-x-0 bottom-0 sm:inset-x-auto sm:bottom-5 sm:left-5 z-50 sm:w-96 max-h-[75dvh] flex flex-col glass-card-active rounded-t-3xl sm:rounded-3xl border border-emerald-400/45 shadow-2xl overflow-hidden">
+    <div class="px-4 py-3 bg-slate-950/90 border-b border-slate-800 flex items-center justify-between gap-2">
+      <div>
+        <div class="font-display font-bold text-xs uppercase tracking-wider text-emerald-300">👥 Friends & Server Invites</div>
+        <div class="text-[10px] text-slate-400">Add players by username & invite to your server</div>
+      </div>
+      <button id="btn-close-friends" type="button"
+        class="w-8 h-8 rounded-xl bg-slate-900 border border-slate-700 text-slate-300 text-xs font-bold">✕</button>
+    </div>
+
+    <form id="add-friend-form" class="p-3 bg-slate-950/70 border-b border-slate-800 flex gap-2">
+      <input id="friend-search-input" type="text" maxlength="22" placeholder="Search or add username..."
+        class="flex-1 min-h-[38px] rounded-xl bg-slate-900 border border-slate-700 px-3 py-1.5 text-xs font-semibold text-white focus:outline-none focus:border-emerald-400" />
+      <button type="submit"
+        class="min-h-[38px] px-3 py-1.5 rounded-xl bg-gradient-to-r from-emerald-400 to-cyan-300 text-slate-950 font-display font-extrabold text-[11px] uppercase shrink-0">
+        + Add
+      </button>
+    </form>
+
+    <div class="flex-1 overflow-y-auto p-3.5 space-y-4 text-xs">
+      <div id="friend-invites-section" class="hidden space-y-2">
+        <div class="text-[10px] font-bold uppercase tracking-wider text-amber-300">Incoming Server Invites</div>
+        <div id="friend-invites-list" class="space-y-2"></div>
+      </div>
+
+      <div class="space-y-2">
+        <div class="flex items-center justify-between text-[10px] font-bold uppercase tracking-wider text-slate-400">
+          <span>Friends List</span>
+          <span id="friends-count-label">0</span>
+        </div>
+        <div id="friends-list-container" class="space-y-2"></div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ===================================================================== -->
+  <!-- LIVE IN-GAME CHAT DRAWER                                              -->
+  <!-- ===================================================================== -->
+  <aside id="chat-drawer" class="hidden fixed inset-x-0 bottom-0 sm:inset-x-auto sm:bottom-5 sm:right-5 z-50 sm:w-96 max-h-[75dvh] flex flex-col glass-card-active rounded-t-3xl sm:rounded-3xl border border-cyan-400/45 shadow-2xl overflow-hidden">
+    <div class="px-4 py-3 bg-slate-950/90 border-b border-slate-800 flex items-center justify-between gap-2">
+      <div>
+        <div class="font-display font-bold text-xs uppercase tracking-wider text-cyan-300">💬 Arena Live Chat</div>
+        <div class="text-[10px] text-slate-400">Quick messages & room chat</div>
+      </div>
+      <button id="btn-close-chat" type="button"
+        class="w-8 h-8 rounded-xl bg-slate-900 border border-slate-700 text-slate-300 text-xs font-bold">✕</button>
+    </div>
+
+    <!-- Quick Messages -->
+    <div class="px-3 py-2 bg-slate-950/60 border-b border-slate-800 flex flex-wrap gap-1.5">
+      <button type="button" data-quick-msg="Nice bid!" class="quick-chat-btn px-2.5 py-1 rounded-full bg-slate-800 hover:bg-cyan-500/20 border border-slate-700 text-[11px] font-semibold text-cyan-200">Nice bid!</button>
+      <button type="button" data-quick-msg="All in!" class="quick-chat-btn px-2.5 py-1 rounded-full bg-slate-800 hover:bg-amber-500/20 border border-slate-700 text-[11px] font-semibold text-amber-200">All in!</button>
+      <button type="button" data-quick-msg="Good luck!" class="quick-chat-btn px-2.5 py-1 rounded-full bg-slate-800 hover:bg-emerald-500/20 border border-slate-700 text-[11px] font-semibold text-emerald-200">Good luck!</button>
+      <button type="button" data-quick-msg="GG!" class="quick-chat-btn px-2.5 py-1 rounded-full bg-slate-800 hover:bg-rose-500/20 border border-slate-700 text-[11px] font-semibold text-rose-200">GG!</button>
+    </div>
+
+    <div id="chat-messages-list" class="flex-1 overflow-y-auto p-3.5 space-y-2.5 text-xs"></div>
+
+    <form id="chat-send-form" class="p-3 bg-slate-950/90 border-t border-slate-800 flex gap-2">
+      <input id="chat-input" type="text" maxlength="160" placeholder="Type a message..."
+        class="flex-1 min-h-[38px] rounded-xl bg-slate-900 border border-slate-700 px-3 py-1.5 text-xs text-white focus:outline-none focus:border-cyan-400" />
+      <button type="submit"
+        class="min-h-[38px] px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-cyan-400 to-sky-300 text-slate-950 font-display font-extrabold text-[11px] uppercase shrink-0">
+        Send
+      </button>
+    </form>
+  </aside>
+
+  <script>
+    const MAX_CARDS_PER_PLAYER = 5;
+    const MIN_RESERVE_PER_SLOT = 1;
+    const DEV_ACCESS_CODE = '15042010';
+
+    const STORAGE_KEYS = {
+      ACCOUNTS: 'aaa_v5_accounts',
+      SESSION: 'aaa_v5_session',
+      LEADERBOARD: 'aaa_v5_leaderboard',
+      ROOMS: 'aaa_v5_rooms',
+      THEME: 'aaa_v5_theme',
+      BANNED: 'aaa_v5_banned',
+      FRIENDS: 'aaa_v5_friends',
+      INVITES: 'aaa_v5_invites'
+    };
+
+    const UPDATE_LOGS_DATA = [
+      {
+        version: 'v5.0',
+        tag: 'Guest Play, Gmail/Browser Accounts, Themes, DEV (15042010) & Friends',
+        items: [
+          'Play immediately as Guest or sign up/log in via Gmail or Connect Browser Account.',
+          'Added 4 colorful themes (Neon Cyber, Sunset Samurai, Emerald Arcade, Solar Gold) with custom inline SVG emblems.',
+          'Added top-left DEV button with passcode 15042010 for banning/unbanning, bonus purse cash, stat boosts, lot skip, and God/Admin mode.',
+          'Added Friends search/add by username and server invites.'
+        ]
+      },
+      {
+        version: 'v4.0',
+        tag: '200 Fighters, 5-Card Cap, Free Remaining Slots & Fair AI Judge',
+        items: [
+          'Built 200 characters across Anime, Cartoon Fiction, Webseries Fiction, and Mix.',
+          'Enforced 5-card limit per player, automatic free claiming when a rival completes 5 cards, and real-players-only leaderboard.'
+        ]
+      },
+      {
+        version: 'v3.0',
+        tag: 'Formats & Purses',
+        items: ['Added 1v1, 2v2, 3v3, 4v4 team formats and $20, $50, $100 equal purses.']
+      },
+      {
+        version: 'v2.0',
+        tag: 'Matchmaking & Rooms',
+        items: ['Added Public, Private room codes, and VS Bot modes.']
+      },
+      {
+        version: 'v1.0',
+        tag: 'Initial Beta',
+        items: ['Created ANIME AUCTION ARENA by DIVYANSH BHATT.']
+      }
+    ];
+
+    /**
+     * =========================================================================
+     * 1. 200 CHARACTER GENERATOR (ANIME, CARTOON FICTION, WEBSERIES FICTION)
+     * =========================================================================
+     */
+    function buildSvgFallbackDataUri(name, source, accentHex) {
+      const initials = String(name || 'AA')
+        .split(/\s+/)
+        .slice(0, 2)
+        .map(w => w[0] || '')
+        .join('')
+        .toUpperCase() || 'AA';
+      const safeName = String(name || '').replace(/[<>&"]/g, '').slice(0, 18);
+      const safeSrc = String(source || '').replace(/[<>&"]/g, '').slice(0, 20);
+      const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="240" height="240" viewBox="0 0 240 240">
+        <defs>
+          <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#0f172a"/>
+            <stop offset="100%" stop-color="${accentHex}"/>
+          </linearGradient>
+        </defs>
+        <rect width="240" height="240" rx="28" fill="url(#g)"/>
+        <circle cx="120" cy="96" r="46" fill="#06080f" fill-opacity="0.72" stroke="#ffffff" stroke-opacity="0.35" stroke-width="2"/>
+        <text x="120" y="108" text-anchor="middle" fill="#ffffff" font-family="Orbitron, sans-serif" font-size="30" font-weight="900">${initials}</text>
+        <text x="120" y="172" text-anchor="middle" fill="#ffffff" font-family="Inter, sans-serif" font-size="15" font-weight="800">${safeName}</text>
+        <text x="120" y="196" text-anchor="middle" fill="#e2e8f0" font-family="Inter, sans-serif" font-size="11">${safeSrc}</text>
+      </svg>`;
+      return 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(svg);
+    }
+
+    function generate200Characters() {
+      const catalog = [];
+      const accents = ['#0891b2', '#e11d48', '#d97706', '#059669', '#7c3aed', '#2563eb'];
+
+      const animeSeeds = [
+        ['Monkey D. Luffy', 'One Piece', 'Gear 5 Sun God', 'https://cdn.myanimelist.net/images/characters/9/310133.jpg'],
+        ['Naruto Uzumaki', 'Naruto Shippuden', 'Six Paths Sage', 'https://cdn.myanimelist.net/images/characters/2/284121.jpg'],
+        ['Sasuke Uchiha', 'Naruto Shippuden', 'Rinnegan Susanoo', 'https://cdn.myanimelist.net/images/characters/9/131317.jpg'],
+        ['Satoru Gojo', 'Jujutsu Kaisen', 'Limitless & Infinity', 'https://cdn.myanimelist.net/images/characters/14/422676.jpg'],
+        ['Ryomen Sukuna', 'Jujutsu Kaisen', 'Malevolent Shrine', 'https://cdn.myanimelist.net/images/characters/12/422677.jpg'],
+        ['Son Goku', 'Dragon Ball Super', 'Ultra Instinct', 'https://cdn.myanimelist.net/images/characters/3/201727.jpg'],
+        ['Vegeta', 'Dragon Ball Super', 'Ultra Ego', 'https://cdn.myanimelist.net/images/characters/8/287181.jpg'],
+        ['Tanjiro Kamado', 'Demon Slayer', 'Sun Breathing', 'https://cdn.myanimelist.net/images/characters/6/355522.jpg'],
+        ['Ichigo Kurosaki', 'Bleach', 'True Bankai', 'https://cdn.myanimelist.net/images/characters/3/77745.jpg'],
+        ['Levi Ackerman', 'Attack on Titan', 'Ackerman Blades', 'https://cdn.myanimelist.net/images/characters/2/241413.jpg'],
+        ['Eren Yeager', 'Attack on Titan', 'Founding Titan', 'https://cdn.myanimelist.net/images/characters/10/216895.jpg'],
+        ['Lelouch Lamperouge', 'Code Geass', 'Power of Geass', 'https://cdn.myanimelist.net/images/characters/8/40616.jpg'],
+        ['Light Yagami', 'Death Note', 'Death Note Tactician', 'https://cdn.myanimelist.net/images/characters/6/63870.jpg'],
+        ['Killua Zoldyck', 'Hunter x Hunter', 'Godspeed Lightning', 'https://cdn.myanimelist.net/images/characters/2/327204.jpg'],
+        ['Gon Freecss', 'Hunter x Hunter', 'Jajanken Enhancer', 'https://cdn.myanimelist.net/images/characters/11/327203.jpg'],
+        ['Saitama', 'One Punch Man', 'Serious Punch', 'https://cdn.myanimelist.net/images/characters/11/284457.jpg'],
+        ['All Might', 'My Hero Academia', 'One For All', 'https://cdn.myanimelist.net/images/characters/11/309896.jpg'],
+        ['Izuku Midoriya', 'My Hero Academia', 'Blackwhip & Gearshift', 'https://cdn.myanimelist.net/images/characters/7/299405.jpg'],
+        ['Edward Elric', 'Fullmetal Alchemist', 'Clapless Alchemy', 'https://cdn.myanimelist.net/images/characters/9/72533.jpg'],
+        ['Roronoa Zoro', 'One Piece', 'King of Hell Three-Sword', 'https://cdn.myanimelist.net/images/characters/3/100534.jpg']
+      ];
+
+      // 80 Anime fighters (20 named + 60 expanded anime variants)
+      for (let i = 0; i < 80; i++) {
+        const base = animeSeeds[i % animeSeeds.length];
+        const variantNum = Math.floor(i / animeSeeds.length);
+        const name = variantNum === 0 ? base[0] : `${base[0]} (Arc ${variantNum + 1})`;
+        const strength = 66 + ((i * 7 + 11) % 33);
+        const speed = 65 + ((i * 5 + 17) % 34);
+        const durability = 64 + ((i * 9 + 7) % 34);
+        const iq = 62 + ((i * 11 + 13) % 36);
+        const ability = 70 + ((i * 6 + 19) % 29);
+        const ovr = Math.round((strength + speed + durability + iq + ability) / 5);
+        const tier = ovr >= 88 ? 'S-TIER' : ovr >= 79 ? 'A-TIER' : 'B-TIER';
+        const basePrice = ovr >= 88 ? 4 : ovr >= 79 ? 3 : 2;
+        catalog.push({
+          id: `ani_${i + 1}`,
+          category: 'anime',
+          name,
+          source: base[1],
+          abilityDesc: `${base[2]} — High-impact combat specialist.`,
+          imgUrl: base[3],
+          fallbackUrl: buildSvgFallbackDataUri(name, base[1], accents[i % accents.length]),
+          strength,
+          speed,
+          durability,
+          iq,
+          ability,
+          ovr,
+          tier,
+          basePrice
+        });
+      }
+
+      const cartoonSeeds = [
+        ['Iron Man', 'MCU / Avengers', 'Repulsor Mark Armor', 'https://upload.wikimedia.org/wikipedia/en/0/02/Iron_Man_%28Anthony_Edward_Stark%29.png'],
+        ['Batman', 'DCU / Gotham', 'Master Detective & Gadgets', 'https://upload.wikimedia.org/wikipedia/en/1/17/Batman-BenAffleck.jpg'],
+        ['Superman', 'DCU / Metropolis', 'Solar Kryptonian Might', 'https://upload.wikimedia.org/wikipedia/en/3/35/Supermanflying.png'],
+        ['Spider-Man', 'MCU / Marvel', 'Spider-Sense & Agility', 'https://upload.wikimedia.org/wikipedia/en/2/21/Web_of_Spider-Man_Vol_1_129-1.png'],
+        ['Wonder Woman', 'DCU / Justice League', 'Lasso of Truth & Aegis', 'https://upload.wikimedia.org/wikipedia/en/9/93/Wonder_Woman.jpg'],
+        ['Thor Odinson', 'MCU / Asgard', 'Stormbreaker Thunder', 'https://upload.wikimedia.org/wikipedia/en/3/3c/Chris_Hemsworth_as_Thor.jpg'],
+        ['The Flash', 'DCU / Speed Force', 'Supersonic Speed Force', 'https://upload.wikimedia.org/wikipedia/en/e/ed/The_Flash_vol._1_123.png'],
+        ['Ben Tennyson', 'Ben 10 / Cartoon', 'Omnitrix Alien Shift', 'https://upload.wikimedia.org/wikipedia/en/2/22/Ben10Omniverse.png'],
+        ['Avatar Aang', 'Avatar: The Last Airbender', 'Avatar State Bending', 'https://upload.wikimedia.org/wikipedia/en/8/87/Aang_at_the_end_of_the_series.png'],
+        ['Samurai Jack', 'Samurai Jack / Cartoon', 'Mystic Katana Precision', 'https://upload.wikimedia.org/wikipedia/en/8/8f/Samurai_Jack.png'],
+        ['Hulk', 'MCU / Avengers', 'Limitless Gamma Rage', 'https://upload.wikimedia.org/wikipedia/en/a/aa/Hulk_%28circa_2019%29.png'],
+        ['Doctor Strange', 'MCU / Mystic Arts', 'Mirror Dimension Sorcery', 'https://upload.wikimedia.org/wikipedia/en/c/c7/Doctor_Strange_film_poster.jpg']
+      ];
+
+      // 60 Cartoon / MCU / DCU fighters
+      for (let i = 0; i < 60; i++) {
+        const base = cartoonSeeds[i % cartoonSeeds.length];
+        const variantNum = Math.floor(i / cartoonSeeds.length);
+        const name = variantNum === 0 ? base[0] : `${base[0]} MK-${variantNum + 1}`;
+        const strength = 67 + ((i * 8 + 9) % 32);
+        const speed = 64 + ((i * 7 + 13) % 34);
+        const durability = 68 + ((i * 6 + 15) % 31);
+        const iq = 65 + ((i * 9 + 5) % 33);
+        const ability = 69 + ((i * 5 + 21) % 30);
+        const ovr = Math.round((strength + speed + durability + iq + ability) / 5);
+        const tier = ovr >= 88 ? 'S-TIER' : ovr >= 79 ? 'A-TIER' : 'B-TIER';
+        const basePrice = ovr >= 88 ? 4 : ovr >= 79 ? 3 : 2;
+        catalog.push({
+          id: `car_${i + 1}`,
+          category: 'cartoon',
+          name,
+          source: base[1],
+          abilityDesc: `${base[2]} — Heroic & tactical powerhouse.`,
+          imgUrl: base[3],
+          fallbackUrl: buildSvgFallbackDataUri(name, base[1], accents[(i + 2) % accents.length]),
+          strength,
+          speed,
+          durability,
+          iq,
+          ability,
+          ovr,
+          tier,
+          basePrice
+        });
+      }
+
+      const webseriesSeeds = [
+        ['Eleven', 'Stranger Things', 'Telekinesis & Rift Pulse', 'https://upload.wikimedia.org/wikipedia/en/5/52/Eleven_%28Stranger_Things%29.jpg'],
+        ['Vecna', 'Stranger Things', 'Mind Lair Domination', 'https://upload.wikimedia.org/wikipedia/en/5/58/Vecna_Stranger_Things.jpg'],
+        ['Walter White', 'Breaking Bad', 'Mastermind Chemistry', 'https://upload.wikimedia.org/wikipedia/en/0/03/Walter_White_S5B.png'],
+        ['Jesse Pinkman', 'Breaking Bad', 'Street Improvisation', 'https://upload.wikimedia.org/wikipedia/en/c/c6/Jesse_Pinkman_S5B.png'],
+        ['Mike Ehrmantraut', 'Breaking Bad', 'Tactical Enforcer', 'https://upload.wikimedia.org/wikipedia/en/3/3c/Mike_Ehrmantraut_BCS_S4.png'],
+        ['Homelander', 'The Boys', 'Heat Vision & Flight', 'https://upload.wikimedia.org/wikipedia/en/2/26/Homelander.jpg'],
+        ['Billy Butcher', 'The Boys', 'Temp-V Brawler', 'https://upload.wikimedia.org/wikipedia/en/8/87/Billy_Butcher.jpg'],
+        ['Seong Gi-hun', 'Squid Game', 'Survival Instinct', 'https://upload.wikimedia.org/wikipedia/en/3/3d/Seong_Gi-hun.jpg'],
+        ['Thomas Shelby', 'Peaky Blinders', 'Cold Strategic Gangster', 'https://upload.wikimedia.org/wikipedia/en/7/7c/Thomas_Shelby.jpg'],
+        ['The Mandalorian', 'The Mandalorian', 'Beskar & Jet-Pack', 'https://upload.wikimedia.org/wikipedia/en/4/45/The_Mandalorian.jpg'],
+        ['Wednesday Addams', 'Wednesday', 'Psychic Visions & Wit', 'https://upload.wikimedia.org/wikipedia/en/8/8f/Wednesday_Addams_Netflix.jpg'],
+        ['Geralt of Rivia', 'The Witcher', 'Witcher Signs & Steel', 'https://upload.wikimedia.org/wikipedia/en/6/6b/Geralt_of_Rivia_Netflix.jpg']
+      ];
+
+      // 60 Webseries fighters
+      for (let i = 0; i < 60; i++) {
+        const base = webseriesSeeds[i % webseriesSeeds.length];
+        const variantNum = Math.floor(i / webseriesSeeds.length);
+        const name = variantNum === 0 ? base[0] : `${base[0]} (Season ${variantNum + 1})`;
+        const strength = 60 + ((i * 6 + 12) % 35);
+        const speed = 62 + ((i * 8 + 6) % 33);
+        const durability = 61 + ((i * 7 + 14) % 34);
+        const iq = 68 + ((i * 9 + 10) % 31);
+        const ability = 64 + ((i * 5 + 16) % 34);
+        const ovr = Math.round((strength + speed + durability + iq + ability) / 5);
+        const tier = ovr >= 88 ? 'S-TIER' : ovr >= 79 ? 'A-TIER' : 'B-TIER';
+        const basePrice = ovr >= 88 ? 4 : ovr >= 79 ? 3 : 2;
+        catalog.push({
+          id: `web_${i + 1}`,
+          category: 'webseries',
+          name,
+          source: base[1],
+          abilityDesc: `${base[2]} — High-stakes series specialist.`,
+          imgUrl: base[3],
+          fallbackUrl: buildSvgFallbackDataUri(name, base[1], accents[(i + 4) % accents.length]),
+          strength,
+          speed,
+          durability,
+          iq,
+          ability,
+          ovr,
+          tier,
+          basePrice
+        });
+      }
+
+      return catalog; // Exactly 200 characters
+    }
+
+    const ALL_CHARACTERS = generate200Characters();
+
+    /**
+     * =========================================================================
+     * 2. SOUND ENGINE (UNLOCKED ON USER INTERACTION)
+     * =========================================================================
+     */
+    const sfx = {
+      ctx: null,
+      enabled: true,
+      init() {
+        if (!this.enabled) return;
+        try {
+          if (!this.ctx) {
+            const AudioCtx = window.AudioContext || window.webkitAudioContext;
+            if (AudioCtx) this.ctx = new AudioCtx();
+          }
+          if (this.ctx && this.ctx.state === 'suspended') {
+            this.ctx.resume().catch(() => {});
+          }
+        } catch {}
+      },
+      tone(freq, duration = 0.12, type = 'sine', gainVal = 0.08) {
+        if (!this.enabled) return;
+        try {
+          this.init();
+          if (!this.ctx) return;
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = type;
+          osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+          gain.gain.setValueAtTime(gainVal, this.ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + duration);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start();
+          osc.stop(this.ctx.currentTime + duration);
+        } catch {}
+      },
+      playClick() { this.tone(540, 0.06, 'triangle', 0.06); },
+      playBid() { this.tone(760, 0.11, 'sine', 0.09); },
+      playSold() {
+        this.tone(523, 0.1, 'triangle', 0.09);
+        setTimeout(() => this.tone(784, 0.18, 'triangle', 0.09), 90);
+      },
+      playTick() { this.tone(330, 0.05, 'sine', 0.04); }
+    };
+
+    /**
+     * =========================================================================
+     * 3. APPLICATION STATE & STORAGE HELPERS
+     * =========================================================================
+     */
+    const appState = {
+      userId: 'guest_' + Math.random().toString(36).slice(2, 7),
+      username: 'Guest',
+      email: '',
+      authProvider: 'guest',
+      isLoggedIn: false,
+      isGuest: true,
+      isDevUnlocked: false,
+      godMode: false,
+      theme: 'neon',
+      friendsOpen: false,
+      chatOpen: false,
+      chatUnread: 0,
+      chatMessages: [],
+      room: {
+        code: '',
+        mode: 'public',
+        isHost: true,
+        format: '1v1',
+        purseAmount: 50,
+        category: 'anime',
+        categoryCompare: true,
+        participants: []
+      },
+      auction: {
+        deck: [],
+        lotIndex: 0,
+        currentBid: 0,
+        highestBidderId: null,
+        timeLeft: 12,
+        timerId: null,
+        botTimeoutId: null,
+        isTransitioning: false,
+        players: []
+      }
+    };
+
+    let broadcastChannel = null;
+    try {
+      if ('BroadcastChannel' in window) {
+        broadcastChannel = new BroadcastChannel('anime_auction_arena_v5_channel');
+      }
+    } catch {}
+
+    function escapeHtml(str) {
+      return String(str || '').replace(/[&<>"']/g, m => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+      }[m]));
+    }
+
+    function showToast(msg, type = 'info') {
+      const container = document.getElementById('toast-container');
+      if (!container) return;
+      const colorMap = {
+        info: 'border-cyan-400/50 bg-slate-900/95 text-cyan-200',
+        success: 'border-emerald-400/50 bg-slate-900/95 text-emerald-200',
+        warn: 'border-amber-400/50 bg-slate-900/95 text-amber-200',
+        error: 'border-rose-400/50 bg-slate-900/95 text-rose-200'
+      };
+      const el = document.createElement('div');
+      el.className = `px-4 py-2.5 rounded-2xl border text-xs font-bold shadow-xl backdrop-blur-md ${colorMap[type] || colorMap.info}`;
+      el.textContent = msg;
+      container.appendChild(el);
+      setTimeout(() => {
+        el.style.opacity = '0';
+        el.style.transition = 'opacity 0.25s ease';
+        setTimeout(() => el.remove(), 260);
+      }, 2800);
+    }
+
+    function stopAuctionTimers() {
+      if (appState.auction.timerId) {
+        clearInterval(appState.auction.timerId);
+        appState.auction.timerId = null;
+      }
+      if (appState.auction.botTimeoutId) {
+        clearTimeout(appState.auction.botTimeoutId);
+        appState.auction.botTimeoutId = null;
+      }
+    }
+
+    function showView(viewId) {
+      stopAuctionTimers();
+      const views = [
+        'view-main-menu',
+        'view-mode-select',
+        'view-server-lobby',
+        'view-arena',
+        'view-results',
+        'view-leaderboard',
+        'view-howtoplay',
+        'view-updates'
+      ];
+      views.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.toggle('hidden', id !== viewId);
+      });
+
+      const backBtn = document.getElementById('btn-back-menu');
+      if (backBtn) {
+        backBtn.classList.toggle('hidden', viewId === 'view-main-menu');
+      }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    /**
+     * =========================================================================
+     * 4. THEME, BANS & ACCOUNTS (GUEST, GMAIL & BROWSER ACCOUNT)
+     * =========================================================================
+     */
+    function applyTheme(themeName) {
+      const valid = ['neon', 'sunset', 'emerald', 'solar'];
+      const chosen = valid.includes(themeName) ? themeName : 'neon';
+      appState.theme = chosen;
+      document.body.setAttribute('data-theme', chosen);
+      try { localStorage.setItem(STORAGE_KEYS.THEME, chosen); } catch {}
+      const sel = document.getElementById('theme-selector');
+      if (sel && sel.value !== chosen) sel.value = chosen;
+    }
+
+    function getBannedList() {
+      try {
+        const arr = JSON.parse(localStorage.getItem(STORAGE_KEYS.BANNED) || '[]');
+        return Array.isArray(arr) ? arr : [];
+      } catch { return []; }
+    }
+
+    function saveBannedList(list) {
+      localStorage.setItem(STORAGE_KEYS.BANNED, JSON.stringify(list));
+      if (broadcastChannel) broadcastChannel.postMessage({ type: 'BANS_UPDATED' });
+    }
+
+    function checkIsBanned(identifier) {
+      const q = String(identifier || '').trim().toLowerCase();
+      if (!q) return null;
+      return getBannedList().find(b =>
+        b.target.toLowerCase() === q ||
+        (b.email && b.email.toLowerCase() === q)
+      ) || null;
+    }
+
+    function getAccounts() {
+      try {
+        const arr = JSON.parse(localStorage.getItem(STORAGE_KEYS.ACCOUNTS) || '[]');
+        return Array.isArray(arr) ? arr : [];
+      } catch { return []; }
+    }
+
+    function saveAccounts(list) {
+      localStorage.setItem(STORAGE_KEYS.ACCOUNTS, JSON.stringify(list));
+    }
+
+    function ensureGuestSession() {
+      if (!appState.username) {
+        appState.username = 'Guest_' + appState.userId.slice(-4).toUpperCase();
+      }
+      appState.isGuest = true;
+      appState.isLoggedIn = false;
+      appState.authProvider = 'guest';
+      appState.email = '';
+    }
+
+    function restoreSession() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(STORAGE_KEYS.SESSION) || 'null');
+        if (saved && saved.isGuest) {
+          appState.userId = saved.userId || appState.userId;
+          appState.username = saved.username || ('Guest_' + appState.userId.slice(-4).toUpperCase());
+          ensureGuestSession();
+          return;
+        }
+        if (saved && saved.userId && saved.username) {
+          const acc = getAccounts().find(a =>
+            a.userId === saved.userId || a.username.toLowerCase() === saved.username.toLowerCase()
+          );
+          if (acc && !checkIsBanned(acc.username) && !checkIsBanned(acc.userId) && !checkIsBanned(acc.email)) {
+            appState.userId = acc.userId;
+            appState.username = acc.username;
+            appState.email = acc.email || '';
+            appState.authProvider = acc.provider || 'gmail';
+            appState.isLoggedIn = true;
+            appState.isGuest = false;
+            return;
+          }
+        }
+      } catch {}
+      ensureGuestSession();
+    }
+
+    function updateAccountUI() {
+      const headerLabel = document.getElementById('header-username-label');
+      const headerId = document.getElementById('header-id-badge');
+      const dot = document.getElementById('account-dot');
+      const menuBtnLabel = document.getElementById('menu-account-status-label');
+      const devBadge = document.getElementById('dev-header-badge');
+
+      if (appState.isLoggedIn && !appState.isGuest) {
+        headerLabel.textContent = appState.username;
+        headerId.textContent = `${appState.authProvider.toUpperCase()} • ${appState.userId}`;
+        headerId.classList.remove('hidden');
+        dot.className = 'w-2 h-2 rounded-full bg-emerald-400 shrink-0';
+        menuBtnLabel.textContent = `${appState.username} (${appState.authProvider.toUpperCase()})`;
+      } else {
+        headerLabel.textContent = appState.username || 'Guest';
+        headerId.classList.add('hidden');
+        dot.className = 'w-2 h-2 rounded-full bg-amber-400 shrink-0';
+        menuBtnLabel.textContent = `Guest: ${appState.username} • Sign In / Link`;
+      }
+
+      if (devBadge) {
+        devBadge.textContent = appState.isDevUnlocked ? (appState.godMode ? 'DEV⚡GOD' : 'DEV✓') : 'DEV';
+      }
+    }
+
+    function openAccountModal(defaultTab = 'login') {
+      document.getElementById('auth-login-error').classList.add('hidden');
+      document.getElementById('auth-signup-error').classList.add('hidden');
+      const box = document.getElementById('auth-active-session-box');
+      if (appState.isLoggedIn && !appState.isGuest) {
+        box.classList.remove('hidden');
+        document.getElementById('auth-session-summary').textContent = `${appState.username} (${appState.userId})`;
+      } else {
+        box.classList.add('hidden');
+      }
+      setAuthTab(defaultTab);
+      document.getElementById('account-modal').classList.remove('hidden');
+    }
+
+    function setAuthTab(tab) {
+      const loginTab = document.getElementById('tab-auth-login');
+      const signupTab = document.getElementById('tab-auth-signup');
+      const loginPane = document.getElementById('auth-login-pane');
+      const signupPane = document.getElementById('auth-signup-pane');
+      if (tab === 'signup') {
+        loginTab.className = 'py-2 rounded-xl font-display font-bold text-xs uppercase text-slate-400 hover:text-white';
+        signupTab.className = 'py-2 rounded-xl font-display font-bold text-xs uppercase bg-amber-400/20 text-amber-300 border border-amber-400/40';
+        loginPane.classList.add('hidden');
+        signupPane.classList.remove('hidden');
+      } else {
+        signupTab.className = 'py-2 rounded-xl font-display font-bold text-xs uppercase text-slate-400 hover:text-white';
+        loginTab.className = 'py-2 rounded-xl font-display font-bold text-xs uppercase bg-cyan-500/20 text-cyan-300 border border-cyan-400/40';
+        signupPane.classList.add('hidden');
+        loginPane.classList.remove('hidden');
+      }
+    }
+
+    function playAsGuest() {
+      const ban = checkIsBanned(appState.username) || checkIsBanned(appState.userId);
+      if (ban) {
+        showToast(`Banned: ${ban.reason}`, 'error');
+        return;
+      }
+      ensureGuestSession();
+      localStorage.setItem(STORAGE_KEYS.SESSION, JSON.stringify({
+        userId: appState.userId,
+        username: appState.username,
+        isGuest: true
+      }));
+      updateAccountUI();
+      document.getElementById('account-modal').classList.add('hidden');
+      sfx.playClick();
+      showToast(`Playing as Guest (${appState.username}).`, 'info');
+    }
+
+    function connectBrowserAccount() {
+      let acc = getAccounts().find(a => a.provider === 'browser');
+      if (!acc) {
+        const code = Math.floor(1000 + Math.random() * 9000);
+        const chosenName = (appState.username && !appState.username.startsWith('Guest_'))
+          ? appState.username
+          : `BrowserPlayer_${code}`;
+        acc = {
+          userId: `BRW-${code}`,
+          username: chosenName,
+          email: '',
+          pin: 'browser-linked',
+          provider: 'browser',
+          createdAt: Date.now()
+        };
+        const list = getAccounts();
+        list.push(acc);
+        saveAccounts(list);
+      }
+      if (checkIsBanned(acc.username) || checkIsBanned(acc.userId)) {
+        showToast('This browser account is banned by a Developer.', 'error');
+        return;
+      }
+      upsertPlayerScore(acc.username, 0, 0, 0);
+      appState.userId = acc.userId;
+      appState.username = acc.username;
+      appState.email = '';
+      appState.authProvider = 'browser';
+      appState.isLoggedIn = true;
+      appState.isGuest = false;
+      localStorage.setItem(STORAGE_KEYS.SESSION, JSON.stringify({
+        userId: acc.userId,
+        username: acc.username,
+        provider: 'browser',
+        isGuest: false
+      }));
+      updateAccountUI();
+      renderFriends();
+      document.getElementById('account-modal').classList.add('hidden');
+      sfx.playClick();
+      showToast(`Connected Browser Account: ${acc.username} (${acc.userId})`, 'success');
+    }
+
+    function submitGmailSignUp() {
+      const gmail = document.getElementById('signup-gmail').value.trim().toLowerCase();
+      const username = document.getElementById('signup-username').value.trim();
+      const pin = document.getElementById('signup-pin').value.trim();
+      const errEl = document.getElementById('auth-signup-error');
+
+      if (!gmail || !gmail.endsWith('@gmail.com') || gmail.length < 11) {
+        errEl.textContent = 'Please enter a valid @gmail.com address.';
+        errEl.classList.remove('hidden');
+        return;
+      }
+      if (checkIsBanned(gmail) || checkIsBanned(username)) {
+        errEl.textContent = 'This Gmail or username is banned.';
+        errEl.classList.remove('hidden');
+        return;
+      }
+      if (username.length < 2) {
+        errEl.textContent = 'Username must be at least 2 characters.';
+        errEl.classList.remove('hidden');
+        return;
+      }
+      if (pin.length < 4) {
+        errEl.textContent = 'PIN must be at least 4 characters.';
+        errEl.classList.remove('hidden');
+        return;
+      }
+
+      const accounts = getAccounts();
+      if (accounts.some(a => a.email === gmail)) {
+        errEl.textContent = 'Gmail already registered. Please log in.';
+        errEl.classList.remove('hidden');
+        return;
+      }
+      if (accounts.some(a => a.username.toLowerCase() === username.toLowerCase())) {
+        errEl.textContent = 'Username already taken.';
+        errEl.classList.remove('hidden');
+        return;
+      }
+
+      const userId = 'GML-' + Math.floor(1000 + Math.random() * 9000);
+      const acc = { userId, username, email: gmail, pin, provider: 'gmail', createdAt: Date.now() };
+      accounts.push(acc);
+      saveAccounts(accounts);
+      upsertPlayerScore(username, 0, 0, 0);
+
+      appState.userId = userId;
+      appState.username = username;
+      appState.email = gmail;
+      appState.authProvider = 'gmail';
+      appState.isLoggedIn = true;
+      appState.isGuest = false;
+      localStorage.setItem(STORAGE_KEYS.SESSION, JSON.stringify({
+        userId, username, email: gmail, provider: 'gmail', isGuest: false
+      }));
+      updateAccountUI();
+      renderFriends();
+      document.getElementById('account-modal').classList.add('hidden');
+      sfx.playClick();
+      showToast(`Signed up with Gmail! ID: ${userId}`, 'success');
+    }
+
+    function submitGmailLogin() {
+      const identifier = document.getElementById('login-identifier').value.trim();
+      const pin = document.getElementById('login-pin').value.trim();
+      const errEl = document.getElementById('auth-login-error');
+
+      if (!identifier || !pin) {
+        errEl.textContent = 'Enter your Gmail/Username/ID and PIN.';
+        errEl.classList.remove('hidden');
+        return;
+      }
+      const ban = checkIsBanned(identifier);
+      if (ban) {
+        errEl.textContent = `Banned: ${ban.reason}`;
+        errEl.classList.remove('hidden');
+        return;
+      }
+      const acc = getAccounts().find(a =>
+        a.userId.toLowerCase() === identifier.toLowerCase() ||
+        a.username.toLowerCase() === identifier.toLowerCase() ||
+        (a.email && a.email.toLowerCase() === identifier.toLowerCase())
+      );
+      if (!acc || acc.pin !== pin) {
+        errEl.textContent = 'Invalid credentials or PIN.';
+        errEl.classList.remove('hidden');
+        return;
+      }
+      appState.userId = acc.userId;
+      appState.username = acc.username;
+      appState.email = acc.email || '';
+      appState.authProvider = acc.provider || 'gmail';
+      appState.isLoggedIn = true;
+      appState.isGuest = false;
+      localStorage.setItem(STORAGE_KEYS.SESSION, JSON.stringify({
+        userId: acc.userId, username: acc.username, email: acc.email || '', provider: appState.authProvider, isGuest: false
+      }));
+      updateAccountUI();
+      renderFriends();
+      document.getElementById('account-modal').classList.add('hidden');
+      sfx.playClick();
+      showToast(`Welcome back, ${acc.username}!`, 'success');
+    }
+
+    function logoutAccount() {
+      localStorage.removeItem(STORAGE_KEYS.SESSION);
+      appState.userId = 'guest_' + Math.random().toString(36).slice(2, 7);
+      appState.username = '';
+      ensureGuestSession();
+      updateAccountUI();
+      document.getElementById('account-modal').classList.add('hidden');
+      showToast('Switched to Guest mode.', 'info');
+    }
+
+    /**
+     * =========================================================================
+     * 5. DEVELOPER CONSOLE (CODE: 15042010)
+     * =========================================================================
+     */
+    function openDevGate() {
+      sfx.playClick();
+      if (appState.isDevUnlocked) {
+        renderDevConsole();
+        document.getElementById('dev-console-modal').classList.remove('hidden');
+        return;
+      }
+      document.getElementById('dev-code-input').value = '';
+      document.getElementById('dev-auth-error').classList.add('hidden');
+      document.getElementById('dev-auth-modal').classList.remove('hidden');
+      setTimeout(() => document.getElementById('dev-code-input').focus(), 40);
+    }
+
+    function submitDevCode() {
+      const code = document.getElementById('dev-code-input').value.trim();
+      const errEl = document.getElementById('dev-auth-error');
+      if (code === DEV_ACCESS_CODE) {
+        appState.isDevUnlocked = true;
+        errEl.classList.add('hidden');
+        document.getElementById('dev-auth-modal').classList.add('hidden');
+        updateAccountUI();
+        renderDevConsole();
+        document.getElementById('dev-console-modal').classList.remove('hidden');
+        sfx.playSold();
+        showToast('Developer Console Unlocked (15042010)!', 'success');
+      } else {
+        errEl.textContent = 'Invalid developer code.';
+        errEl.classList.remove('hidden');
+      }
+    }
+
+    function banTargetPlayer() {
+      if (!appState.isDevUnlocked) return;
+      const target = document.getElementById('dev-ban-username-input').value.trim();
+      const reason = document.getElementById('dev-ban-reason-input').value.trim() || 'Banned by Developer';
+      if (!target) {
+        showToast('Enter a player username or ID to ban.', 'warn');
+        return;
+      }
+      const list = getBannedList().filter(b => b.target.toLowerCase() !== target.toLowerCase());
+      list.push({ target, reason });
+      saveBannedList(list);
+      document.getElementById('dev-ban-username-input').value = '';
+      document.getElementById('dev-ban-reason-input').value = '';
+      renderDevConsole();
+      showToast(`Banned "${target}".`, 'warn');
+    }
+
+    function unbanTargetPlayer(target) {
+      if (!appState.isDevUnlocked) return;
+      const list = getBannedList().filter(b => b.target.toLowerCase() !== String(target).toLowerCase());
+      saveBannedList(list);
+      renderDevConsole();
+      showToast(`Unbanned "${target}".`, 'success');
+    }
+
+    function renderDevConsole() {
+      const godEl = document.getElementById('dev-god-status');
+      if (godEl) {
+        godEl.textContent = appState.godMode ? 'ON ⚡' : 'OFF';
+        godEl.className = appState.godMode
+          ? 'font-display font-extrabold text-xs text-emerald-300 mt-0.5'
+          : 'font-display font-extrabold text-xs text-cyan-300 mt-0.5';
+      }
+
+      const banned = getBannedList();
+      const box = document.getElementById('dev-banned-list');
+      if (!box) return;
+      if (!banned.length) {
+        box.innerHTML = `<div class="text-[11px] text-slate-500">No banned players.</div>`;
+        return;
+      }
+      box.innerHTML = banned.map(b => `
+        <div class="flex items-center justify-between gap-2 px-3 py-2 rounded-xl bg-rose-950/35 border border-rose-500/35">
+          <div class="truncate">
+            <strong class="text-rose-200">${escapeHtml(b.target)}</strong>
+            <span class="text-slate-400 text-[11px] ml-2">— ${escapeHtml(b.reason)}</span>
+          </div>
+          <button type="button" data-unban="${escapeHtml(b.target)}"
+            class="dev-unban-btn px-2.5 py-1 rounded-lg bg-emerald-500/20 border border-emerald-400/40 text-emerald-200 text-[11px] font-bold shrink-0">
+            Unban
+          </button>
+        </div>
+      `).join('');
+      box.querySelectorAll('.dev-unban-btn').forEach(btn => {
+        btn.addEventListener('click', () => unbanTargetPlayer(btn.dataset.unban));
+      });
+    }
+
+    /**
+     * =========================================================================
+     * 6. FRIENDS & SERVER INVITES + CHAT
+     * =========================================================================
+     */
+    function getFriends() {
+      try {
+        const list = JSON.parse(localStorage.getItem(STORAGE_KEYS.FRIENDS) || 'null');
+        if (Array.isArray(list)) return list;
+      } catch {}
+      const init = [
+        { username: 'DIVYANSH BHATT', status: 'Creator / Online' },
+        { username: 'AnimeAce', status: 'Online' }
+      ];
+      localStorage.setItem(STORAGE_KEYS.FRIENDS, JSON.stringify(init));
+      return init;
+    }
+
+    function saveFriends(list) {
+      localStorage.setItem(STORAGE_KEYS.FRIENDS, JSON.stringify(list));
+    }
+
+    function getInvites() {
+      try {
+        const list = JSON.parse(localStorage.getItem(STORAGE_KEYS.INVITES) || '[]');
+        return Array.isArray(list) ? list : [];
+      } catch { return []; }
+    }
+
+    function saveInvites(list) {
+      localStorage.setItem(STORAGE_KEYS.INVITES, JSON.stringify(list));
+    }
+
+    function updateFriendBadge() {
+      const badge = document.getElementById('friend-invite-badge');
+      const count = getInvites().length;
+      if (!badge) return;
+      if (!appState.friendsOpen && count > 0) {
+        badge.textContent = String(count);
+        badge.classList.remove('hidden');
+      } else {
+        badge.classList.add('hidden');
+      }
+    }
+
+    function toggleFriendsDrawer(force = null) {
+      sfx.playClick();
+      const drawer = document.getElementById('friends-drawer');
+      const next = typeof force === 'boolean' ? force : drawer.classList.contains('hidden');
+      appState.friendsOpen = next;
+      drawer.classList.toggle('hidden', !next);
+      if (next) {
+        updateFriendBadge();
+        renderFriends();
+      }
+    }
+
+    function addFriend(username) {
+      const uname = String(username || '').trim();
+      if (uname.length < 2) {
+        showToast('Enter a username to add.', 'warn');
+        return;
+      }
+      if (uname.toLowerCase() === appState.username.toLowerCase()) {
+        showToast('Cannot add yourself.', 'warn');
+        return;
+      }
+      const list = getFriends();
+      if (list.some(f => f.username.toLowerCase() === uname.toLowerCase())) {
+        showToast(`${uname} is already in your friends.`, 'info');
+        return;
+      }
+      list.push({ username: uname, status: 'Ready to Invite' });
+      saveFriends(list);
+      renderFriends();
+      sfx.playClick();
+      showToast(`Added ${uname} to Friends!`, 'success');
+    }
+
+    function inviteFriendToServer(friendName) {
+      if (!appState.room.code) {
+        createPrivateServer();
+      }
+      const code = appState.room.code;
+      const invite = {
+        id: 'inv_' + Date.now() + '_' + Math.random().toString(36).slice(2, 5),
+        from: appState.username,
+        to: friendName,
+        roomCode: code
+      };
+      const invites = getInvites();
+      invites.unshift(invite);
+      saveInvites(invites.slice(0, 20));
+      if (broadcastChannel) broadcastChannel.postMessage({ type: 'SERVER_INVITE', invite });
+      sfx.playClick();
+      showToast(`Invited ${friendName} to Server ${code}!`, 'success');
+    }
+
+    function acceptInvite(inviteId) {
+      const invites = getInvites();
+      const found = invites.find(i => i.id === inviteId);
+      saveInvites(invites.filter(i => i.id !== inviteId));
+      updateFriendBadge();
+      renderFriends();
+      if (found && found.roomCode) {
+        joinPrivateServer(found.roomCode);
+      }
+    }
+
+    function renderFriends() {
+      const friends = getFriends();
+      const invites = getInvites();
+      document.getElementById('friends-count-label').textContent = String(friends.length);
+
+      const invSec = document.getElementById('friend-invites-section');
+      const invList = document.getElementById('friend-invites-list');
+      if (invites.length) {
+        invSec.classList.remove('hidden');
+        invList.innerHTML = invites.map(inv => `
+          <div class="p-2.5 rounded-xl bg-amber-500/15 border border-amber-400/40 flex items-center justify-between gap-2">
+            <div class="min-w-0">
+              <div class="font-bold text-amber-200 truncate">${escapeHtml(inv.from)}</div>
+              <div class="text-[10px] text-slate-300">Room: <strong class="font-display text-amber-300">${escapeHtml(inv.roomCode)}</strong></div>
+            </div>
+            <button type="button" data-acc-inv="${escapeHtml(inv.id)}"
+              class="acc-inv-btn px-2.5 py-1.5 rounded-lg bg-amber-400 text-slate-950 font-display font-black text-[10px] uppercase shrink-0">
+              Join
+            </button>
+          </div>
+        `).join('');
+        invList.querySelectorAll('.acc-inv-btn').forEach(btn => {
+          btn.addEventListener('click', () => acceptInvite(btn.dataset.accInv));
+        });
+      } else {
+        invSec.classList.add('hidden');
+      }
+
+      const container = document.getElementById('friends-list-container');
+      container.innerHTML = friends.map(f => `
+        <div class="p-2.5 rounded-xl bg-slate-900/90 border border-slate-800 flex items-center justify-between gap-2">
+          <div class="min-w-0">
+            <div class="font-bold text-white truncate">${escapeHtml(f.username)}</div>
+            <div class="text-[10px] text-emerald-400">${escapeHtml(f.status)}</div>
+          </div>
+          <button type="button" data-inv-name="${escapeHtml(f.username)}"
+            class="inv-friend-btn px-2.5 py-1.5 rounded-lg bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-400/40 text-emerald-200 font-bold text-[11px] shrink-0">
+            Invite
+          </button>
+        </div>
+      `).join('');
+      container.querySelectorAll('.inv-friend-btn').forEach(btn => {
+        btn.addEventListener('click', () => inviteFriendToServer(btn.dataset.invName));
+      });
+    }
+
+    function toggleChatDrawer(force = null) {
+      sfx.playClick();
+      const drawer = document.getElementById('chat-drawer');
+      const next = typeof force === 'boolean' ? force : drawer.classList.contains('hidden');
+      appState.chatOpen = next;
+      drawer.classList.toggle('hidden', !next);
+      if (next) {
+        appState.chatUnread = 0;
+        updateChatBadge();
+        renderChatMessages();
+      }
+    }
+
+    function updateChatBadge() {
+      const badge = document.getElementById('chat-unread-badge');
+      if (!badge) return;
+      if (!appState.chatOpen && appState.chatUnread > 0) {
+        badge.textContent = String(appState.chatUnread);
+        badge.classList.remove('hidden');
+      } else {
+        badge.classList.add('hidden');
+      }
+    }
+
+    function sendChatMessage(text, sender = null, isSystem = false) {
+      const clean = String(text || '').trim();
+      if (!clean) return;
+      const msg = {
+        id: 'm_' + Date.now() + '_' + Math.random().toString(36).slice(2, 5),
+        sender: sender || appState.username,
+        text: clean,
+        isSystem,
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      };
+      appState.chatMessages.push(msg);
+      if (!appState.chatOpen && !isSystem) {
+        appState.chatUnread += 1;
+        updateChatBadge();
+      }
+      renderChatMessages();
+      if (!sender && !isSystem && broadcastChannel) {
+        broadcastChannel.postMessage({ type: 'CHAT_MSG', msg });
+      }
+    }
+
+    function renderChatMessages() {
+      const box = document.getElementById('chat-messages-list');
+      if (!box) return;
+      if (!appState.chatMessages.length) {
+        box.innerHTML = `<div class="text-center text-slate-500 py-6">No messages yet. Say hello or tap a quick message!</div>`;
+        return;
+      }
+      box.innerHTML = appState.chatMessages.map(m => `
+        <div class="p-2.5 rounded-2xl ${m.isSystem ? 'bg-amber-500/10 border border-amber-400/25 text-amber-200' : 'bg-slate-900/90 border border-slate-800 text-slate-200'}">
+          <div class="flex items-center justify-between text-[10px] mb-0.5">
+            <span class="font-bold ${m.isSystem ? 'text-amber-300' : 'text-cyan-300'}">${escapeHtml(m.sender)}</span>
+            <span class="text-slate-500">${escapeHtml(m.time)}</span>
+          </div>
+          <div class="break-words">${escapeHtml(m.text)}</div>
+        </div>
+      `).join('');
+      box.scrollTop = box.scrollHeight;
+    }
+
+    /**
+     * =========================================================================
+     * 7. MATCHMAKING & LOBBY (1v1..4v4, $20/$50/$100, CATEGORIES, COMPARE)
+     * =========================================================================
+     */
+    function getStoredRooms() {
+      try {
+        return JSON.parse(localStorage.getItem(STORAGE_KEYS.ROOMS) || '{}') || {};
+      } catch { return {}; }
+    }
+
+    function saveStoredRooms(rooms) {
+      localStorage.setItem(STORAGE_KEYS.ROOMS, JSON.stringify(rooms));
+      if (broadcastChannel) broadcastChannel.postMessage({ type: 'ROOMS_UPDATED' });
+    }
+
+    function generateRoomCode() {
+      const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+      let out = '';
+      for (let i = 0; i < 5; i++) out += chars[Math.floor(Math.random() * chars.length)];
+      return out;
+    }
+
+    function getPlayersForFormat(fmt) {
+      const map = { '1v1': 2, '2v2': 4, '3v3': 6, '4v4': 8 };
+      return map[fmt] || 2;
+    }
+
+    function handlePlayEntry() {
+      sfx.playClick();
+      const ban = checkIsBanned(appState.username) || checkIsBanned(appState.userId) || checkIsBanned(appState.email);
+      if (ban) {
+        showToast(`Banned: ${ban.reason}`, 'error');
+        return;
+      }
+      if (!appState.username) ensureGuestSession();
+      updateAccountUI();
+      document.getElementById('mode-username-display').textContent = appState.username;
+      document.getElementById('mode-playerid-display').textContent = `${appState.authProvider.toUpperCase()} • ${appState.userId}`;
+      document.getElementById('private-room-panel').classList.add('hidden');
+      showView('view-mode-select');
+    }
+
+    function openLobby(roomObj) {
+      appState.room.code = roomObj.code || generateRoomCode();
+      appState.room.mode = roomObj.mode || 'public';
+      appState.room.isHost = roomObj.isHost !== false;
+      appState.room.format = roomObj.format || '1v1';
+      appState.room.purseAmount = roomObj.purseAmount || 50;
+      appState.room.category = roomObj.category || 'anime';
+      appState.room.categoryCompare = roomObj.categoryCompare !== false;
+      appState.room.participants = Array.isArray(roomObj.participants) && roomObj.participants.length
+        ? roomObj.participants
+        : [{ id: appState.userId, name: appState.username, isBot: false }];
+
+      renderLobby();
+      showView('view-server-lobby');
+    }
+
+    function joinPublicServer() {
+      sfx.playClick();
+      const rooms = getStoredRooms();
+      const existing = Object.values(rooms).find(r => r.mode === 'public' && r.status === 'waiting' && r.code);
+      if (existing) {
+        if (!existing.participants.some(p => p.id === appState.userId)) {
+          existing.participants.push({ id: appState.userId, name: appState.username, isBot: false });
+          rooms[existing.code] = existing;
+          saveStoredRooms(rooms);
+        }
+        openLobby({ ...existing, isHost: existing.hostId === appState.userId });
+        showToast(`Joined Public Server ${existing.code}!`, 'success');
+      } else {
+        const code = generateRoomCode();
+        const fresh = {
+          code,
+          mode: 'public',
+          hostId: appState.userId,
+          status: 'waiting',
+          format: '1v1',
+          purseAmount: 50,
+          category: 'anime',
+          categoryCompare: true,
+          participants: [{ id: appState.userId, name: appState.username, isBot: false }]
+        };
+        rooms[code] = fresh;
+        saveStoredRooms(rooms);
+        openLobby({ ...fresh, isHost: true });
+        showToast(`Created Public Server ${code}!`, 'success');
+      }
+    }
+
+    function createPrivateServer() {
+      sfx.playClick();
+      const code = generateRoomCode();
+      const rooms = getStoredRooms();
+      const fresh = {
+        code,
+        mode: 'private',
+        hostId: appState.userId,
+        status: 'waiting',
+        format: '1v1',
+        purseAmount: 50,
+        category: 'anime',
+        categoryCompare: true,
+        participants: [{ id: appState.userId, name: appState.username, isBot: false }]
+      };
+      rooms[code] = fresh;
+      saveStoredRooms(rooms);
+      openLobby({ ...fresh, isHost: true });
+      showToast(`Private Server ${code} created!`, 'success');
+    }
+
+    function joinPrivateServer(rawCode) {
+      const code = String(rawCode || '').trim().toUpperCase();
+      const errEl = document.getElementById('private-code-error');
+      if (!code || code.length < 4) {
+        errEl.textContent = 'Enter a valid room code.';
+        errEl.classList.remove('hidden');
+        return;
+      }
+      const rooms = getStoredRooms();
+      const target = rooms[code];
+      if (!target) {
+        errEl.textContent = `No room found with code "${code}".`;
+        errEl.classList.remove('hidden');
+        return;
+      }
+      errEl.classList.add('hidden');
+      if (!target.participants.some(p => p.id === appState.userId)) {
+        target.participants.push({ id: appState.userId, name: appState.username, isBot: false });
+        rooms[code] = target;
+        saveStoredRooms(rooms);
+      }
+      openLobby({ ...target, isHost: target.hostId === appState.userId });
+      showToast(`Joined Private Server ${code}!`, 'success');
+    }
+
+    function startVsBotMatch() {
+      sfx.playClick();
+      const code = generateRoomCode();
+      openLobby({
+        code,
+        mode: 'bot',
+        isHost: true,
+        format: '1v1',
+        purseAmount: 50,
+        category: 'anime',
+        categoryCompare: true,
+        participants: [
+          { id: appState.userId, name: appState.username, isBot: false },
+          { id: 'bot_1', name: 'RivalBot Alpha', isBot: true }
+        ]
+      });
+      showToast('VS Bot lobby ready!', 'success');
+    }
+
+    function addBotToLobby() {
+      sfx.playClick();
+      const needed = getPlayersForFormat(appState.room.format);
+      if (appState.room.participants.length >= needed) {
+        showToast(`Lobby already full for ${appState.room.format} (${needed} slots).`, 'info');
+        return;
+      }
+      const botNames = ['NovaBot', 'KuroAI', 'ValkyrieBot', 'TitanAI', 'ZeroBot', 'ShinobiAI'];
+      const used = new Set(appState.room.participants.map(p => p.name));
+      const freeName = botNames.find(n => !used.has(n)) || `Bot_${appState.room.participants.length + 1}`;
+      appState.room.participants.push({
+        id: 'bot_' + Date.now() + '_' + Math.random().toString(36).slice(2, 4),
+        name: freeName,
+        isBot: true
+      });
+      renderLobby();
+    }
+
+    function renderLobby() {
+      document.getElementById('lobby-mode-badge').textContent = appState.room.mode.toUpperCase();
+      document.getElementById('lobby-room-code').textContent = appState.room.code;
+      document.getElementById('lobby-category-select').value = appState.room.category;
+
+      document.querySelectorAll('.format-btn').forEach(btn => {
+        const active = btn.dataset.format === appState.room.format;
+        btn.className = `format-btn py-2.5 px-2 rounded-xl font-display font-bold text-xs border ${
+          active ? 'bg-cyan-400 text-slate-950 border-cyan-300' : 'bg-slate-900 text-slate-300 border-slate-700'
+        }`;
+      });
+
+      document.querySelectorAll('.purse-btn').forEach(btn => {
+        const active = Number(btn.dataset.purse) === Number(appState.room.purseAmount);
+        btn.className = `purse-btn py-2.5 px-2 rounded-xl font-display font-extrabold text-xs border ${
+          active ? 'bg-amber-300 text-slate-950 border-amber-200' : 'bg-slate-900 text-slate-300 border-slate-700'
+        }`;
+      });
+
+      const cmpBtn = document.getElementById('btn-toggle-category-compare');
+      const cmpLbl = document.getElementById('compare-mode-label');
+      const cmpPill = document.getElementById('compare-mode-pill');
+      const cmpDesc = document.getElementById('compare-mode-desc');
+      if (appState.room.categoryCompare) {
+        cmpBtn.className = 'w-full min-h-[42px] px-3 py-2 rounded-xl bg-emerald-500/20 border border-emerald-400/50 text-emerald-200 font-display font-bold text-xs flex items-center justify-between';
+        cmpLbl.textContent = 'Category-Wise: ON';
+        cmpPill.textContent = '5 STATS';
+        cmpPill.className = 'px-2 py-0.5 rounded bg-emerald-400 text-slate-950 text-[10px] font-black';
+        cmpDesc.textContent = 'Compares Strength, Speed, Durability, IQ & Ability category-by-category.';
+      } else {
+        cmpBtn.className = 'w-full min-h-[42px] px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-slate-300 font-display font-bold text-xs flex items-center justify-between';
+        cmpLbl.textContent = 'Category-Wise: OFF';
+        cmpPill.textContent = 'TOTAL PWR';
+        cmpPill.className = 'px-2 py-0.5 rounded bg-cyan-400 text-slate-950 text-[10px] font-black';
+        cmpDesc.textContent = 'Compares overall Total Power Level across squads.';
+      }
+
+      const totalSlots = getPlayersForFormat(appState.room.format);
+      const perSide = Math.floor(totalSlots / 2);
+
+      // Ensure at least current user is present and fill empty slots with bots if needed on start
+      const alpha = [];
+      const omega = [];
+      for (let i = 0; i < totalSlots; i++) {
+        const p = appState.room.participants[i] || {
+          id: `auto_bot_${i + 1}`,
+          name: `AI Fighter ${i + 1}`,
+          isBot: true
+        };
+        if (i < perSide) alpha.push(p);
+        else omega.push(p);
+      }
+
+      document.getElementById('team-alpha-count').textContent = `${alpha.length} players`;
+      document.getElementById('team-omega-count').textContent = `${omega.length} players`;
+
+      const renderSlotRow = (p, sideLabel) => `
+        <div class="p-2.5 rounded-xl bg-slate-950/80 border border-slate-800 flex items-center justify-between text-xs">
+          <div class="flex items-center gap-2 min-w-0">
+            <span class="font-bold text-white truncate">${escapeHtml(p.name)}</span>
+            <span class="px-1.5 py-0.5 rounded text-[10px] font-bold ${p.isBot ? 'bg-purple-500/20 text-purple-300' : 'bg-cyan-500/20 text-cyan-300'}">
+              ${p.isBot ? 'BOT' : 'REAL'}
+            </span>
+          </div>
+          <span class="text-[11px] text-amber-300 font-display">$${appState.room.purseAmount} • ${sideLabel}</span>
+        </div>
+      `;
+
+      document.getElementById('team-alpha-slots').innerHTML = alpha.map(p => renderSlotRow(p, 'Alpha')).join('');
+      document.getElementById('team-omega-slots').innerHTML = omega.map(p => renderSlotRow(p, 'Omega')).join('');
+    }
+
+    /**
+     * =========================================================================
+     * 8. LIVE AUCTION ENGINE (5-CARD CAP, FREE CLAIM WHEN RIVAL FULL, NO PASS)
+     * =========================================================================
+     */
+    function buildPoolForCategory(cat) {
+      if (cat === 'mix') return [...ALL_CHARACTERS];
+      return ALL_CHARACTERS.filter(c => c.category === cat);
+    }
+
+    function shuffleArray(arr) {
+      const copy = [...arr];
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    }
+
+    function startAuction() {
+      sfx.playClick();
+      const totalPlayers = getPlayersForFormat(appState.room.format);
+      const perSide = Math.floor(totalPlayers / 2);
+
+      const players = [];
+      for (let i = 0; i < totalPlayers; i++) {
+        const src = appState.room.participants[i] || {
+          id: `bot_slot_${i + 1}`,
+          name: `AI Challenger ${i + 1}`,
+          isBot: true
+        };
+        players.push({
+          id: src.id,
+          name: src.name,
+          isBot: Boolean(src.isBot),
+          side: i < perSide ? 'Alpha' : 'Omega',
+          purse: Number(appState.room.purseAmount) || 50,
+          roster: []
+        });
+      }
+
+      // Ensure human user is included if not already in list
+      if (!players.some(p => p.id === appState.userId)) {
+        players[0] = {
+          id: appState.userId,
+          name: appState.username,
+          isBot: false,
+          side: 'Alpha',
+          purse: Number(appState.room.purseAmount) || 50,
+          roster: []
+        };
+      }
+
+      const pool = shuffleArray(buildPoolForCategory(appState.room.category));
+      // Enough cards so every player can draft up to 5 cards
+      const neededDeckSize = Math.min(pool.length, Math.max(totalPlayers * MAX_CARDS_PER_PLAYER + 4, 15));
+
+      appState.auction.players = players;
+      appState.auction.deck = pool.slice(0, neededDeckSize);
+      appState.auction.lotIndex = 0;
+      appState.auction.isTransitioning = false;
+
+      showView('view-arena');
+      loadLot(0);
+    }
+
+    function isAnyPlayerOrSideFull() {
+      const anyPlayerFull = appState.auction.players.some(p => p.roster.length >= MAX_CARDS_PER_PLAYER);
+      if (anyPlayerFull) return true;
+      const sides = ['Alpha', 'Omega'];
+      return sides.some(side => {
+        const group = appState.auction.players.filter(p => p.side === side);
+        return group.length > 0 && group.every(p => p.roster.length >= MAX_CARDS_PER_PLAYER);
+      });
+    }
+
+    function allPlayersFull() {
+      return appState.auction.players.every(p => p.roster.length >= MAX_CARDS_PER_PLAYER);
+    }
+
+    function getMaxBidForPlayer(player) {
+      if (player.roster.length >= MAX_CARDS_PER_PLAYER) return 0;
+      if (appState.godMode && player.id === appState.userId) return 9999;
+      const slotsAfter = Math.max(0, MAX_CARDS_PER_PLAYER - player.roster.length - 1);
+      return Math.max(0, player.purse - slotsAfter * MIN_RESERVE_PER_SLOT);
+    }
+
+    function loadLot(idx) {
+      stopAuctionTimers();
+      appState.auction.isTransitioning = false;
+
+      if (allPlayersFull() || idx >= appState.auction.deck.length) {
+        finishAuctionAndJudge();
+        return;
+      }
+
+      appState.auction.lotIndex = idx;
+      const charObj = appState.auction.deck[idx];
+      const freeMode = isAnyPlayerOrSideFull();
+
+      appState.auction.currentBid = freeMode ? 0 : charObj.basePrice;
+      appState.auction.highestBidderId = null;
+      appState.auction.timeLeft = 12;
+
+      // Update Character Spotlight
+      const img = document.getElementById('char-portrait-img');
+      img.src = charObj.imgUrl;
+      img.onerror = function () {
+        this.onerror = null;
+        this.src = charObj.fallbackUrl;
+      };
+
+      document.getElementById('arena-lot-num').textContent = String(idx + 1);
+      document.getElementById('arena-lot-total').textContent = String(appState.auction.deck.length);
+      document.getElementById('arena-category-tag').textContent = appState.room.category.toUpperCase();
+      document.getElementById('arena-compare-tag').textContent = appState.room.categoryCompare ? 'Category-Wise AI' : 'Total Power AI';
+
+      document.getElementById('char-tier-badge').textContent = charObj.tier;
+      document.getElementById('char-source-title').textContent = charObj.source;
+      document.getElementById('char-name-heading').textContent = charObj.name;
+      document.getElementById('char-ability-desc').textContent = charObj.abilityDesc;
+      document.getElementById('char-base-price').textContent = freeMode ? '$0 (FREE)' : `$${charObj.basePrice}`;
+      document.getElementById('char-ovr-score').textContent = String(charObj.ovr);
+
+      document.getElementById('stat-strength').textContent = String(charObj.strength);
+      document.getElementById('stat-speed').textContent = String(charObj.speed);
+      document.getElementById('stat-durability').textContent = String(charObj.durability);
+      document.getElementById('stat-iq').textContent = String(charObj.iq);
+      document.getElementById('stat-ability').textContent = String(charObj.ability);
+
+      const banner = document.getElementById('arena-free-claim-banner');
+      banner.classList.toggle('hidden', !freeMode);
+
+      updateArenaUI();
+      renderArenaRosters();
+
+      appState.auction.timerId = setInterval(() => {
+        if (appState.auction.isTransitioning) return;
+        appState.auction.timeLeft -= 1;
+        if (appState.auction.timeLeft <= 4 && appState.auction.timeLeft > 0) {
+          sfx.playTick();
+        }
+        updateTimerUI();
+        if (appState.auction.timeLeft <= 0) {
+          resolveCurrentLot();
+        }
+      }, 1000);
+
+      scheduleBotBid();
+    }
+
+    function updateTimerUI() {
+      const valEl = document.getElementById('arena-timer-val');
+      const boxEl = document.getElementById('arena-timer-box');
+      if (!valEl || !boxEl) return;
+      valEl.textContent = `${Math.max(0, appState.auction.timeLeft)}s`;
+      boxEl.classList.toggle('urgent-pulse', appState.auction.timeLeft <= 4);
+    }
+
+    function updateArenaUI() {
+      updateTimerUI();
+      const freeMode = isAnyPlayerOrSideFull();
+      const me = appState.auction.players.find(p => p.id === appState.userId);
+      const highestPlayer = appState.auction.players.find(p => p.id === appState.auction.highestBidderId);
+
+      document.getElementById('arena-current-bid').textContent = freeMode && appState.auction.currentBid === 0
+        ? '$0 (FREE)'
+        : `$${appState.auction.currentBid}`;
+      document.getElementById('arena-highest-bidder').textContent = highestPlayer
+        ? `${highestPlayer.name} (${highestPlayer.side})`
+        : (freeMode ? 'Free Claim Open' : 'No bids yet');
+
+      if (me) {
+        document.getElementById('arena-my-purse').textContent = `$${me.purse}`;
+        document.getElementById('arena-my-cards').textContent = `${me.roster.length} / ${MAX_CARDS_PER_PLAYER}`;
+      }
+
+      const passBtn = document.getElementById('btn-pass-lot');
+      const myNeedsCards = me && me.roster.length < MAX_CARDS_PER_PLAYER;
+      // When freeMode is active and player still needs cards, they cannot pass
+      if (freeMode && myNeedsCards) {
+        passBtn.disabled = true;
+        passBtn.textContent = 'Cannot Pass (Free Slot Open)';
+        passBtn.className = 'w-full min-h-[44px] rounded-xl bg-amber-950/60 border border-amber-500/40 font-display font-bold text-xs uppercase tracking-wider text-amber-300 opacity-80 cursor-not-allowed';
+      } else {
+        passBtn.disabled = false;
+        passBtn.textContent = 'Pass Lot';
+        passBtn.className = 'w-full min-h-[44px] rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 font-display font-bold text-xs uppercase tracking-wider text-slate-300 transition active:scale-95';
+      }
+    }
+
+    function renderArenaRosters() {
+      const grid = document.getElementById('arena-teams-grid');
+      if (!grid) return;
+      grid.innerHTML = appState.auction.players.map(p => {
+        const isHigh = p.id === appState.auction.highestBidderId;
+        return `
+          <div class="glass-panel rounded-2xl p-3.5 space-y-2 ${isHigh ? 'border-amber-400/70' : ''}">
+            <div class="flex items-center justify-between gap-2">
+              <div class="truncate">
+                <div class="font-bold text-xs text-white truncate">${escapeHtml(p.name)}</div>
+                <div class="text-[10px] text-slate-400">${escapeHtml(p.side)} • ${p.isBot ? 'Bot' : 'Player'}</div>
+              </div>
+              <div class="text-right shrink-0">
+                <div class="font-display font-extrabold text-xs text-emerald-300">$${p.purse}</div>
+                <div class="text-[10px] text-cyan-300">${p.roster.length}/${MAX_CARDS_PER_PLAYER} cards</div>
+              </div>
+            </div>
+            <div class="flex flex-wrap gap-1">
+              ${p.roster.length
+                ? p.roster.map(c => `<span class="px-2 py-0.5 rounded bg-slate-900 border border-slate-700 text-[10px] text-slate-200 truncate max-w-[120px]">${escapeHtml(c.name)}</span>`).join('')
+                : `<span class="text-[10px] text-slate-500">No cards drafted yet</span>`
+              }
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function submitHumanBid(amount) {
+      if (appState.auction.isTransitioning) return;
+      const me = appState.auction.players.find(p => p.id === appState.userId);
+      if (!me) return;
+      if (me.roster.length >= MAX_CARDS_PER_PLAYER) {
+        showToast(`You already own the maximum ${MAX_CARDS_PER_PLAYER} cards!`, 'warn');
+        return;
+      }
+      const targetBid = Number(amount);
+      if (!Number.isFinite(targetBid) || targetBid < 0) {
+        showToast('Enter a valid bid amount.', 'warn');
+        return;
+      }
+      const freeMode = isAnyPlayerOrSideFull();
+      const minRequired = appState.auction.highestBidderId
+        ? appState.auction.currentBid + 1
+        : (freeMode ? 0 : Math.max(1, appState.auction.currentBid));
+
+      if (targetBid < minRequired) {
+        showToast(`Bid must be at least $${minRequired}.`, 'warn');
+        return;
+      }
+      const maxAllowed = getMaxBidForPlayer(me);
+      if (targetBid > maxAllowed) {
+        showToast(`Max safe bid is $${maxAllowed} (keep $1 reserve per remaining slot).`, 'warn');
+        return;
+      }
+
+      appState.auction.currentBid = targetBid;
+      appState.auction.highestBidderId = me.id;
+      appState.auction.timeLeft = Math.max(appState.auction.timeLeft, 6);
+      sfx.playBid();
+      updateArenaUI();
+      renderArenaRosters();
+      showToast(`${me.name} bid $${targetBid}!`, 'info');
+    }
+
+    function handleHumanPass() {
+      if (appState.auction.isTransitioning) return;
+      const freeMode = isAnyPlayerOrSideFull();
+      const me = appState.auction.players.find(p => p.id === appState.userId);
+      if (freeMode && me && me.roster.length < MAX_CARDS_PER_PLAYER) {
+        showToast('You cannot pass while a rival is full and you still have open slots!', 'warn');
+        return;
+      }
+      sfx.playClick();
+      if (appState.auction.highestBidderId) {
+        resolveCurrentLot();
+      } else {
+        loadLot(appState.auction.lotIndex + 1);
+      }
+    }
+
+    function scheduleBotBid() {
+      if (appState.auction.isTransitioning) return;
+      const freeMode = isAnyPlayerOrSideFull();
+      if (freeMode) return; // Free mode lets remaining non-full players claim free slots
+
+      const delay = 1400 + Math.floor(Math.random() * 1600);
+      appState.auction.botTimeoutId = setTimeout(() => {
+        if (appState.auction.isTransitioning) return;
+        const charObj = appState.auction.deck[appState.auction.lotIndex];
+        const eligibleBots = appState.auction.players.filter(p =>
+          p.isBot &&
+          p.id !== appState.auction.highestBidderId &&
+          p.roster.length < MAX_CARDS_PER_PLAYER
+        );
+
+        if (eligibleBots.length) {
+          const bot = eligibleBots[Math.floor(Math.random() * eligibleBots.length)];
+          const nextBid = appState.auction.highestBidderId
+            ? appState.auction.currentBid + 1
+            : Math.max(1, charObj.basePrice);
+          const maxCap = getMaxBidForPlayer(bot);
+          const fairValue = Math.max(2, Math.round((charObj.ovr / 100) * (appState.room.purseAmount / 4)));
+
+          if (nextBid <= maxCap && nextBid <= fairValue + 3 && Math.random() < 0.72) {
+            appState.auction.currentBid = nextBid;
+            appState.auction.highestBidderId = bot.id;
+            appState.auction.timeLeft = Math.max(appState.auction.timeLeft, 5);
+            sfx.playBid();
+            updateArenaUI();
+            renderArenaRosters();
+          }
+        }
+        scheduleBotBid();
+      }, delay);
+    }
+
+    function resolveCurrentLot() {
+      if (appState.auction.isTransitioning) return;
+      appState.auction.isTransitioning = true;
+      stopAuctionTimers();
+
+      const charObj = appState.auction.deck[appState.auction.lotIndex];
+      const freeMode = isAnyPlayerOrSideFull();
+      let winner = appState.auction.players.find(p => p.id === appState.auction.highestBidderId);
+
+      // If free mode is active and nobody bid yet, assign free to first eligible player who still needs cards
+      if (!winner && freeMode) {
+        winner = appState.auction.players.find(p => p.roster.length < MAX_CARDS_PER_PLAYER) || null;
+        if (winner) appState.auction.currentBid = 0;
+      }
+
+      if (winner && winner.roster.length < MAX_CARDS_PER_PLAYER) {
+        const pricePaid = freeMode ? 0 : Math.min(winner.purse, appState.auction.currentBid);
+        if (!(appState.godMode && winner.id === appState.userId)) {
+          winner.purse = Math.max(0, winner.purse - pricePaid);
+        }
+        winner.roster.push({ ...charObj, paid: pricePaid });
+        sfx.playSold();
+        showToast(`${charObj.name} drafted by ${winner.name} for $${pricePaid}!`, 'success');
+      } else {
+        showToast(`${charObj.name} went unsold.`, 'info');
+      }
+
+      renderArenaRosters();
+      setTimeout(() => {
+        if (!document.getElementById('view-arena').classList.contains('hidden')) {
+          loadLot(appState.auction.lotIndex + 1);
+        }
+      }, 950);
+    }
+
+    /**
+     * =========================================================================
+     * 9. FAIR AI JUDGE & REAL-PLAYERS-ONLY LEADERBOARD
+     * =========================================================================
+     */
+    function computeSquadStats(roster) {
+      const totals = { strength: 0, speed: 0, durability: 0, iq: 0, ability: 0, totalPower: 0 };
+      roster.forEach(c => {
+        totals.strength += Number(c.strength || 0);
+        totals.speed += Number(c.speed || 0);
+        totals.durability += Number(c.durability || 0);
+        totals.iq += Number(c.iq || 0);
+        totals.ability += Number(c.ability || 0);
+        totals.totalPower += Number(c.ovr || 0);
+      });
+      return totals;
+    }
+
+    function finishAuctionAndJudge() {
+      stopAuctionTimers();
+
+      // Group scores by side (Alpha vs Omega) fairly
+      const sides = ['Alpha', 'Omega'];
+      const categories = ['strength', 'speed', 'durability', 'iq', 'ability'];
+      const sideSummaries = sides.map(sideName => {
+        const members = appState.auction.players.filter(p => p.side === sideName);
+        const combined = { strength: 0, speed: 0, durability: 0, iq: 0, ability: 0, totalPower: 0 };
+        members.forEach(m => {
+          const s = computeSquadStats(m.roster);
+          categories.forEach(k => { combined[k] += s[k]; });
+          combined.totalPower += s.totalPower;
+        });
+        return { side: sideName, members, stats: combined, categoryWins: 0 };
+      });
+
+      let winnerSide = sideSummaries[0];
+      let breakdownHtml = '';
+
+      if (appState.room.categoryCompare) {
+        const rows = categories.map(catKey => {
+          const aVal = sideSummaries[0].stats[catKey];
+          const bVal = sideSummaries[1].stats[catKey];
+          let edge = 'Tie';
+          if (aVal > bVal) {
+            sideSummaries[0].categoryWins += 1;
+            edge = 'Alpha Edge';
+          } else if (bVal > aVal) {
+            sideSummaries[1].categoryWins += 1;
+            edge = 'Omega Edge';
+          }
+          return `
+            <div class="p-3 rounded-2xl bg-slate-950/80 border border-slate-800 flex items-center justify-between text-xs sm:text-sm">
+              <span class="font-display font-bold uppercase text-cyan-300 w-24">${catKey}</span>
+              <span class="font-display font-bold text-white">Alpha: ${aVal}</span>
+              <span class="font-display font-bold text-rose-300">Omega: ${bVal}</span>
+              <span class="px-2.5 py-0.5 rounded-full bg-slate-900 text-amber-300 text-xs font-bold">${edge}</span>
+            </div>
+          `;
+        }).join('');
+
+        if (sideSummaries[0].categoryWins > sideSummaries[1].categoryWins) {
+          winnerSide = sideSummaries[0];
+        } else if (sideSummaries[1].categoryWins > sideSummaries[0].categoryWins) {
+          winnerSide = sideSummaries[1];
+        } else {
+          winnerSide = sideSummaries[0].stats.totalPower >= sideSummaries[1].stats.totalPower
+            ? sideSummaries[0]
+            : sideSummaries[1];
+        }
+
+        breakdownHtml = `
+          <div class="text-xs font-bold uppercase tracking-wider text-emerald-300">Category-Wise Fair Breakdown</div>
+          <div class="space-y-2">${rows}</div>
+        `;
+      } else {
+        const aTot = sideSummaries[0].stats.totalPower;
+        const bTot = sideSummaries[1].stats.totalPower;
+        winnerSide = aTot >= bTot ? sideSummaries[0] : sideSummaries[1];
+        breakdownHtml = `
+          <div class="text-xs font-bold uppercase tracking-wider text-cyan-300">Total Power Level Comparison</div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div class="p-4 rounded-2xl bg-slate-950/80 border border-cyan-500/30">
+              <div class="text-xs text-slate-400">Team Alpha Total Power</div>
+              <div class="font-display font-black text-2xl text-cyan-300">${aTot}</div>
+            </div>
+            <div class="p-4 rounded-2xl bg-slate-950/80 border border-rose-500/30">
+              <div class="text-xs text-slate-400">Team Omega Total Power</div>
+              <div class="font-display font-black text-2xl text-rose-300">${bTot}</div>
+            </div>
+          </div>
+        `;
+      }
+
+      document.getElementById('results-winner-banner').textContent = `Team ${winnerSide.side} Wins!`;
+      document.getElementById('results-summary-text').textContent = appState.room.categoryCompare
+        ? `Category-Wise AI Judge scored Alpha (${sideSummaries[0].categoryWins} cats) vs Omega (${sideSummaries[1].categoryWins} cats).`
+        : `Total Power AI Judge scored Alpha (${sideSummaries[0].stats.totalPower}) vs Omega (${sideSummaries[1].stats.totalPower}).`;
+      document.getElementById('results-ai-breakdown').innerHTML = breakdownHtml;
+
+      document.getElementById('results-rosters-grid').innerHTML = appState.auction.players.map(p => {
+        const st = computeSquadStats(p.roster);
+        return `
+          <div class="glass-panel rounded-3xl p-4 space-y-2.5">
+            <div class="flex items-center justify-between">
+              <div>
+                <div class="font-display font-bold text-sm text-white">${escapeHtml(p.name)}</div>
+                <div class="text-[11px] text-slate-400">Team ${escapeHtml(p.side)} • ${p.isBot ? 'Bot' : 'Real Player'}</div>
+              </div>
+              <div class="text-right">
+                <div class="font-display font-black text-sm text-amber-300">PWR ${st.totalPower}</div>
+                <div class="text-[11px] text-emerald-300">$${p.purse} left</div>
+              </div>
+            </div>
+            <div class="space-y-1">
+              ${p.roster.map(c => `
+                <div class="flex items-center justify-between text-xs px-2.5 py-1.5 rounded-xl bg-slate-950/70 border border-slate-800/80">
+                  <span class="font-semibold text-slate-200 truncate">${escapeHtml(c.name)} <span class="text-[10px] text-slate-400">(${escapeHtml(c.source)})</span></span>
+                  <span class="font-display text-cyan-300 text-xs shrink-0">OVR ${c.ovr}</span>
+                </div>
+              `).join('') || `<div class="text-xs text-slate-500">0 cards drafted</div>`}
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      // Record ONLY real players (never bots) into Leaderboard
+      appState.auction.players.forEach(p => {
+        if (!p.isBot) {
+          const won = p.side === winnerSide.side ? 1 : 0;
+          const st = computeSquadStats(p.roster);
+          upsertPlayerScore(p.name, won, 1, st.totalPower);
+        }
+      });
+
+      sfx.playSold();
+      showView('view-results');
+    }
+
+    function isBotName(name) {
+      const n = String(name || '').toLowerCase();
+      return n.includes('bot') || n.startsWith('ai ');
+    }
+
+    function getRealPlayersLeaderboard() {
+      try {
+        const raw = JSON.parse(localStorage.getItem(STORAGE_KEYS.LEADERBOARD) || '[]');
+        if (!Array.isArray(raw)) return [];
+        return raw
+          .filter(entry => entry && entry.name && !isBotName(entry.name))
+          .sort((a, b) => (b.score || 0) - (a.score || 0) || (b.wins || 0) - (a.wins || 0));
+      } catch { return []; }
+    }
+
+    function upsertPlayerScore(name, winDelta, matchDelta, scoreDelta) {
+      if (!name || isBotName(name)) return;
+      const list = getRealPlayersLeaderboard();
+      const idx = list.findIndex(e => e.name.toLowerCase() === String(name).toLowerCase());
+      if (idx >= 0) {
+        list[idx].wins = (list[idx].wins || 0) + winDelta;
+        list[idx].matches = (list[idx].matches || 0) + matchDelta;
+        list[idx].score = (list[idx].score || 0) + scoreDelta;
+      } else {
+        list.push({
+          name: String(name),
+          wins: winDelta,
+          matches: matchDelta,
+          score: scoreDelta
+        });
+      }
+      localStorage.setItem(STORAGE_KEYS.LEADERBOARD, JSON.stringify(list));
+    }
+
+    function renderLeaderboard() {
+      const rows = getRealPlayersLeaderboard();
+      const tbody = document.getElementById('leaderboard-tbody');
+      if (!tbody) return;
+      if (!rows.length) {
+        tbody.innerHTML = `<tr><td colspan="5" class="py-8 px-4 text-center text-slate-400">No real player records yet. Finish a match to appear here!</td></tr>`;
+        return;
+      }
+      tbody.innerHTML = rows.map((r, i) => `
+        <tr class="hover:bg-slate-900/50">
+          <td class="py-3 px-4 font-display font-bold text-amber-300">#${i + 1}</td>
+          <td class="py-3 px-4 font-bold text-white">${escapeHtml(r.name)}</td>
+          <td class="py-3 px-4 font-display text-emerald-300">${r.wins || 0}</td>
+          <td class="py-3 px-4 text-slate-300">${r.matches || 0}</td>
+          <td class="py-3 px-4 font-display font-bold text-cyan-300">${r.score || 0}</td>
+        </tr>
+      `).join('');
+    }
+
+    function renderUpdateLogs() {
+      const container = document.getElementById('update-logs-container');
+      if (!container) return;
+      container.innerHTML = UPDATE_LOGS_DATA.map(log => `
+        <div class="glass-panel rounded-3xl p-5 space-y-2.5">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <span class="px-3 py-1 rounded-xl bg-cyan-500/15 border border-cyan-400/40 font-display font-black text-xs text-cyan-300">
+              ${escapeHtml(log.version)}
+            </span>
+            <span class="text-xs font-bold text-amber-300">${escapeHtml(log.tag)}</span>
+          </div>
+          <ul class="list-disc list-inside space-y-1 text-xs sm:text-sm text-slate-300">
+            ${log.items.map(it => `<li>${escapeHtml(it)}</li>`).join('')}
+          </ul>
+        </div>
+      `).join('');
+    }
+
+    /**
+     * =========================================================================
+     * 10. EVENT WIRING & INITIALIZATION
+     * =========================================================================
+     */
+    document.addEventListener('DOMContentLoaded', () => {
+      try {
+        const savedTheme = localStorage.getItem(STORAGE_KEYS.THEME);
+        if (savedTheme) applyTheme(savedTheme);
+      } catch {}
+
+      restoreSession();
+      updateAccountUI();
+      updateFriendBadge();
+      updateChatBadge();
+      renderUpdateLogs();
+      sendChatMessage('Welcome to ANIME AUCTION ARENA by DIVYANSH BHATT!', 'Arena System', true);
+
+      document.addEventListener('pointerdown', () => sfx.init(), { passive: true });
+
+      // Top bar & main menu
+      document.getElementById('btn-home-logo').addEventListener('click', () => { sfx.playClick(); showView('view-main-menu'); });
+      document.getElementById('btn-back-menu').addEventListener('click', () => { sfx.playClick(); showView('view-main-menu'); });
+      document.getElementById('btn-sound-toggle').addEventListener('click', () => {
+        sfx.enabled = !sfx.enabled;
+        document.getElementById('sound-icon').textContent = sfx.enabled ? '🔊' : '🔇';
+        showToast(sfx.enabled ? 'Sound effects ON' : 'Sound effects OFF', 'info');
+      });
+
+      document.getElementById('theme-selector').addEventListener('change', e => {
+        sfx.playClick();
+        applyTheme(e.target.value);
+      });
+      document.querySelectorAll('.theme-chip').forEach(btn => {
+        btn.addEventListener('click', () => {
+          sfx.playClick();
+          applyTheme(btn.dataset.themeChoice);
+        });
+      });
+
+      document.getElementById('menu-btn-play').addEventListener('click', handlePlayEntry);
+      document.getElementById('menu-btn-leaderboard').addEventListener('click', () => {
+        sfx.playClick();
+        renderLeaderboard();
+        showView('view-leaderboard');
+      });
+      document.getElementById('menu-btn-howtoplay').addEventListener('click', () => {
+        sfx.playClick();
+        showView('view-howtoplay');
+      });
+      document.getElementById('menu-btn-updates').addEventListener('click', () => {
+        sfx.playClick();
+        renderUpdateLogs();
+        showView('view-updates');
+      });
+      document.getElementById('menu-btn-exit').addEventListener('click', () => {
+        sfx.playClick();
+        try { window.close(); } catch {}
+        showToast('Thank you for playing ANIME AUCTION ARENA by DIVYANSH BHATT! You can close this tab now.', 'info');
+      });
+
+      // Account modal controls
+      document.getElementById('btn-account-pill').addEventListener('click', () => { sfx.playClick(); openAccountModal('login'); });
+      document.getElementById('menu-account-trigger').addEventListener('click', () => { sfx.playClick(); openAccountModal('login'); });
+      document.getElementById('btn-change-username').addEventListener('click', () => { sfx.playClick(); openAccountModal('login'); });
+      document.getElementById('btn-close-account-modal').addEventListener('click', () => {
+        document.getElementById('account-modal').classList.add('hidden');
+      });
+      document.getElementById('tab-auth-login').addEventListener('click', () => setAuthTab('login'));
+      document.getElementById('tab-auth-signup').addEventListener('click', () => setAuthTab('signup'));
+      document.getElementById('btn-play-as-guest').addEventListener('click', playAsGuest);
+      document.getElementById('btn-connect-browser-account').addEventListener('click', connectBrowserAccount);
+      document.getElementById('btn-submit-login').addEventListener('click', submitGmailLogin);
+      document.getElementById('btn-submit-signup').addEventListener('click', submitGmailSignUp);
+      document.getElementById('btn-logout-account').addEventListener('click', logoutAccount);
+
+      // DEV modal controls (Code: 15042010)
+      document.getElementById('btn-dev-trigger').addEventListener('click', openDevGate);
+      document.getElementById('btn-close-dev-auth').addEventListener('click', () => {
+        document.getElementById('dev-auth-modal').classList.add('hidden');
+      });
+      document.getElementById('btn-submit-dev-code').addEventListener('click', submitDevCode);
+      document.getElementById('dev-code-input').addEventListener('keydown', e => {
+        if (e.key === 'Enter') submitDevCode();
+      });
+      document.getElementById('btn-close-dev-console').addEventListener('click', () => {
+        document.getElementById('dev-console-modal').classList.add('hidden');
+      });
+      document.getElementById('btn-lock-dev-mode').addEventListener('click', () => {
+        appState.isDevUnlocked = false;
+        appState.godMode = false;
+        updateAccountUI();
+        document.getElementById('dev-console-modal').classList.add('hidden');
+        showToast('Developer powers locked.', 'info');
+      });
+      document.getElementById('dev-btn-god-mode').addEventListener('click', () => {
+        appState.godMode = !appState.godMode;
+        updateAccountUI();
+        renderDevConsole();
+        updateArenaUI();
+        showToast(`God / Admin Mode ${appState.godMode ? 'ON' : 'OFF'}`, 'success');
+      });
+      document.getElementById('dev-btn-bonus-purse').addEventListener('click', () => {
+        const me = appState.auction.players.find(p => p.id === appState.userId);
+        if (me) {
+          me.purse += 50;
+          updateArenaUI();
+          renderArenaRosters();
+        }
+        appState.room.purseAmount += 50;
+        showToast('Added +$50 bonus purse cash!', 'success');
+      });
+      document.getElementById('dev-btn-boost-stats').addEventListener('click', () => {
+        const cur = appState.auction.deck[appState.auction.lotIndex];
+        if (cur) {
+          cur.strength = Math.min(99, cur.strength + 10);
+          cur.speed = Math.min(99, cur.speed + 10);
+          cur.durability = Math.min(99, cur.durability + 10);
+          cur.iq = Math.min(99, cur.iq + 10);
+          cur.ability = Math.min(99, cur.ability + 10);
+          cur.ovr = Math.round((cur.strength + cur.speed + cur.durability + cur.iq + cur.ability) / 5);
+          loadLot(appState.auction.lotIndex);
+          showToast(`Boosted ${cur.name} stats by +10!`, 'success');
+        }
+      });
+      document.getElementById('dev-btn-skip-lot').addEventListener('click', () => {
+        if (!document.getElementById('view-arena').classList.contains('hidden')) {
+          resolveCurrentLot();
+          document.getElementById('dev-console-modal').classList.add('hidden');
+        } else {
+          showToast('No active auction lot right now.', 'info');
+        }
+      });
+      document.getElementById('dev-btn-ban-player').addEventListener('click', banTargetPlayer);
+
+      // Friends drawer
+      document.getElementById('btn-toggle-friends').addEventListener('click', () => toggleFriendsDrawer());
+      document.getElementById('btn-close-friends').addEventListener('click', () => toggleFriendsDrawer(false));
+      document.getElementById('btn-lobby-invite-friend').addEventListener('click', () => toggleFriendsDrawer(true));
+      document.getElementById('add-friend-form').addEventListener('submit', e => {
+        e.preventDefault();
+        const inp = document.getElementById('friend-search-input');
+        addFriend(inp.value);
+        inp.value = '';
+      });
+
+      // Chat drawer
+      document.getElementById('btn-toggle-chat').addEventListener('click', () => toggleChatDrawer());
+      document.getElementById('btn-close-chat').addEventListener('click', () => toggleChatDrawer(false));
+      document.querySelectorAll('.quick-chat-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          sfx.playClick();
+          sendChatMessage(btn.dataset.quickMsg);
+        });
+      });
+      document.getElementById('chat-send-form').addEventListener('submit', e => {
+        e.preventDefault();
+        const inp = document.getElementById('chat-input');
+        if (inp.value.trim()) {
+          sendChatMessage(inp.value);
+          inp.value = '';
+        }
+      });
+
+      // Mode selection
+      document.getElementById('mode-card-public').addEventListener('click', joinPublicServer);
+      document.getElementById('mode-card-private').addEventListener('click', () => {
+        sfx.playClick();
+        document.getElementById('private-code-error').classList.add('hidden');
+        document.getElementById('private-room-panel').classList.remove('hidden');
+      });
+      document.getElementById('btn-close-private-panel').addEventListener('click', () => {
+        document.getElementById('private-room-panel').classList.add('hidden');
+      });
+      document.getElementById('btn-create-private-room').addEventListener('click', createPrivateServer);
+      document.getElementById('btn-join-private-room').addEventListener('click', () => {
+        joinPrivateServer(document.getElementById('private-join-code-input').value);
+      });
+      document.getElementById('mode-card-bot').addEventListener('click', startVsBotMatch);
+
+      // Lobby controls
+      document.querySelectorAll('.format-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          sfx.playClick();
+          appState.room.format = btn.dataset.format;
+          renderLobby();
+        });
+      });
+      document.querySelectorAll('.purse-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          sfx.playClick();
+          appState.room.purseAmount = Number(btn.dataset.purse);
+          renderLobby();
+        });
+      });
+      document.getElementById('lobby-category-select').addEventListener('change', e => {
+        sfx.playClick();
+        appState.room.category = e.target.value;
+      });
+      document.getElementById('btn-toggle-category-compare').addEventListener('click', () => {
+        sfx.playClick();
+        appState.room.categoryCompare = !appState.room.categoryCompare;
+        renderLobby();
+      });
+      document.getElementById('btn-copy-room-code').addEventListener('click', () => {
+        const code = appState.room.code;
+        if (!code) return;
+        try {
+          navigator.clipboard.writeText(code).catch(() => {});
+        } catch {}
+        showToast(`Room code ${code} ready to share!`, 'success');
+      });
+      document.getElementById('btn-lobby-add-bot').addEventListener('click', addBotToLobby);
+      document.getElementById('btn-start-auction').addEventListener('click', startAuction);
+
+      // Arena bidding controls
+      document.querySelectorAll('.quick-bid-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const inc = Number(btn.dataset.inc || 1);
+          const freeMode = isAnyPlayerOrSideFull();
+          const base = appState.auction.highestBidderId
+            ? appState.auction.currentBid + inc
+            : (freeMode ? inc - 1 : Math.max(1, appState.auction.currentBid) + (inc - 1));
+          submitHumanBid(Math.max(0, base));
+        });
+      });
+      document.getElementById('btn-place-custom-bid').addEventListener('click', () => {
+        const val = Number(document.getElementById('custom-bid-input').value);
+        submitHumanBid(val);
+      });
+      document.getElementById('btn-pass-lot').addEventListener('click', handleHumanPass);
+
+      // Results & navigation buttons
+      document.getElementById('btn-results-play-again').addEventListener('click', startAuction);
+      document.getElementById('btn-results-leaderboard').addEventListener('click', () => {
+        renderLeaderboard();
+        showView('view-leaderboard');
+      });
+      document.getElementById('btn-results-menu').addEventListener('click', () => showView('view-main-menu'));
+      document.getElementById('btn-lb-back').addEventListener('click', () => showView('view-main-menu'));
+      document.getElementById('btn-htp-back').addEventListener('click', () => showView('view-main-menu'));
+      document.getElementById('btn-upd-back').addEventListener('click', () => showView('view-main-menu'));
+
+      // Cross-tab sync
+      if (broadcastChannel) {
+        broadcastChannel.onmessage = e => {
+          if (e.data?.type === 'CHAT_MSG' && e.data.msg) {
+            appState.chatMessages.push(e.data.msg);
+            if (!appState.chatOpen) {
+              appState.chatUnread += 1;
+              updateChatBadge();
+            }
+            renderChatMessages();
+          } else if (e.data?.type === 'SERVER_INVITE' && e.data.invite) {
+            updateFriendBadge();
+            if (appState.friendsOpen) renderFriends();
+            showToast(`Server invite from ${e.data.invite.from} (Code: ${e.data.invite.roomCode})!`, 'info');
+          } else if (e.data?.type === 'BANS_UPDATED') {
+            const ban = checkIsBanned(appState.username) || checkIsBanned(appState.userId);
+            if (ban) {
+              showToast(`You were banned by a Developer: ${ban.reason}`, 'error');
+              showView('view-main-menu');
+            }
+          }
+        };
+      }
+    });
+  </script>
+</body>
+</html>
